@@ -25,6 +25,6 @@ class Tarif extends Model
 
     public function pressing()
     {
-        return $this->belongsTo(User::class, 'id_pressing');
+    return $this->belongsTo(User::class, 'id_pressing')->where('role', 'pressing');
     }
 }

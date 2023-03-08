@@ -13,7 +13,7 @@ class Service extends Model
 
     public function pressing()
     {
-        return $this->belongsTo(Pressing::class);
+        return $this->belongsTo(User::class, 'id_pressing')->where('role', 'pressing');
     }
 
     public function tarifs()

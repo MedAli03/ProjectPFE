@@ -16,13 +16,13 @@ class Rating extends Model
         'value'
     ];
 
-    public function user()
+    public function client()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'client_id')->where('role', 'client');
     }
 
     public function pressing()
     {
-        return $this->belongsTo(Pressing::class);
+        return $this->belongsTo(User::class, 'pressing_id')->where('role', 'pressing');
     }
 }

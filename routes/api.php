@@ -44,39 +44,37 @@ Route::prefix('pressing')->group(function () {
 // });
 
 
-// Route::prefix('commande')->group(function () {
+
+
+// Admin routes
+Route::group(['middleware' => ['auth:sanctum', 'role:admin']],function () {
     
-//     Route::get('/', 'App\Http\Controllers\CommandeController@index');
-//     Route::post('/', 'App\Http\Controllers\CommandeController@store');
-//     Route::get('/{id}', 'App\Http\Controllers\CommandeController@show');
-//     Route::put('/{id}', 'App\Http\Controllers\CommandeController@update');
-//     Route::delete('/{id}', 'App\Http\Controllers\CommandeController@destroy');
-//     Route::put('/status/{id}', 'App\Http\Controllers\CommandeController@modifyStatus');
-//     Route::put('/validate/{id}', 'App\Http\Controllers\CommandeController@validation');
-// });
+    Route::post('/activate/{id}', 'App\Http\Controllers\UserController@activatePressingAccount');
+});
 
 
-// Route::middleware(['auth:sanctum', 'role:client'])->group(function () {
-    
-//     Route::get('/users', 'App\Http\Controllers\UserController@index');
 
-// });
+// Client routes
 Route::group(['middleware' => ['auth:sanctum', 'role:client']],function () {
+    
+    Route::get('/users', 'App\Http\Controllers\UserController@index');
+
+    Route::prefix('rating')->group(function () {
+    Route::get('/', 'App\Http\Controllers\RatingController@index');
+    Route::post('/', 'App\Http\Controllers\RatingController@store');
+    Route::get('/{id}', 'App\Http\Controllers\RatingController@show');
+    Route::put('/{id}', 'App\Http\Controllers\RatingController@update');
+    Route::delete('/{id}', 'App\Http\Controllers\RatingController@destroy');
+});
+
+});
+
+
+// Pressing routes
+Route::group(['middleware' => ['auth:sanctum', 'role:pressing']],function () {
     
     Route::get('/users', 'App\Http\Controllers\UserController@index');
 });
 
 
-// Pressing routes
-Route::middleware(['auth:sanctum', 'role:pressing'])->group(function () {
-    Route::prefix('commande')->group(function () {
-    
-        Route::get('/', 'App\Http\Controllers\CommandeController@index');
-        Route::post('/', 'App\Http\Controllers\CommandeController@store');
-        Route::get('/{id}', 'App\Http\Controllers\CommandeController@show');
-        Route::put('/{id}', 'App\Http\Controllers\CommandeController@update');
-        Route::delete('/{id}', 'App\Http\Controllers\CommandeController@destroy');
-        Route::put('/status/{id}', 'App\Http\Controllers\CommandeController@modifyStatus');
-        Route::put('/validate/{id}', 'App\Http\Controllers\CommandeController@validation');
-    });
-});
+
