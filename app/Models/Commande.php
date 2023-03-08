@@ -13,11 +13,12 @@ class Commande extends Model
 
         'client_id',
         'pressing_id',
-        // 'article_id',
-        // 'service_id',
+        'article_id',
+        'service_id',
+        'tarif_id',
         'status',
-        // 'quantity',
-        'total_amount',
+        'quantity',
+        'total_price',
 
        
         

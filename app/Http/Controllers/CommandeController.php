@@ -19,6 +19,9 @@ class CommandeController extends Controller
         $commande = Commande::create([
             'client_id' => $request->client_id,
             'pressing_id' => $request->pressing_id,
+            'article_id' => $request->client_id,
+            'service_id' => $request->pressing_id,
+            'quantity' => $request->quantity,
             'status' => $request->status,
             'total_amount' => $request->total_amount,
             // add more attributes here as needed
