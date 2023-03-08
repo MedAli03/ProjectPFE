@@ -13,10 +13,6 @@ return new class extends Migration
 {
     Schema::create('rating', function (Blueprint $table) {
         $table->id();
-        $table->unsignedBigInteger('client_id');
-        $table->foreign('client_id')->references('id')->on('clients')->onDelete('cascade');
-        $table->unsignedBigInteger('pressing_id');
-        $table->foreign('pressing_id')->references('id')->on('pressings')->onDelete('cascade');
         $table->integer('value');
         $table->timestamps();
     });

@@ -61,10 +61,10 @@ Route::group(['middleware' => ['auth:sanctum', 'role:client']],function () {
 
     Route::prefix('rating')->group(function () {
     Route::get('/', 'App\Http\Controllers\RatingController@index');
-    Route::post('/', 'App\Http\Controllers\RatingController@store');
+    Route::post('/', 'App\Http\Controllers\RatingController@rate');
     Route::get('/{id}', 'App\Http\Controllers\RatingController@show');
-    Route::put('/{id}', 'App\Http\Controllers\RatingController@update');
-    Route::delete('/{id}', 'App\Http\Controllers\RatingController@destroy');
+    Route::put('/{id}', 'App\Http\Controllers\RatingController@updateRating');
+    Route::delete('/{id}', 'App\Http\Controllers\RatingController@deleteRate');
 });
 
 });
@@ -74,6 +74,15 @@ Route::group(['middleware' => ['auth:sanctum', 'role:client']],function () {
 Route::group(['middleware' => ['auth:sanctum', 'role:pressing']],function () {
     
     Route::get('/users', 'App\Http\Controllers\UserController@index');
+
+    Route::prefix('article')->group(function () {
+        Route::get('/', 'App\Http\Controllers\ArticleController@index');
+        Route::post('/', 'App\Http\Controllers\ArticleController@store');
+        Route::get('/{id}', 'App\Http\Controllers\ArticleController@show');
+        Route::put('/{id}', 'App\Http\Controllers\ArticleController@update');
+        Route::delete('/{id}', 'App\Http\Controllers\ArticleController@destroy');
+    });
+    
 });
 
 
