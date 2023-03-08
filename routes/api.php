@@ -45,3 +45,13 @@ Route::prefix('rating')->group(function () {
     Route::put('/{id}', 'App\Http\Controllers\RatingController@update');
     Route::delete('/{id}', 'App\Http\Controllers\RatingController@destroy');
 });
+
+
+Route::prefix('commande')->group(function () {
+
+    Route::get('/', 'App\Http\Controllers\CommandeController@index');
+    Route::post('/', 'App\Http\Controllers\CommandeController@store');
+    Route::get('/{id}', 'App\Http\Controllers\CommandeController@show');
+    Route::put('/{id}', 'App\Http\Controllers\CommandeController@update');
+    Route::delete('/{id}', 'App\Http\Controllers\CommandeController@destroy');
+});
