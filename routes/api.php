@@ -48,10 +48,12 @@ Route::prefix('rating')->group(function () {
 
 
 Route::prefix('commande')->group(function () {
-
+    
     Route::get('/', 'App\Http\Controllers\CommandeController@index');
     Route::post('/', 'App\Http\Controllers\CommandeController@store');
     Route::get('/{id}', 'App\Http\Controllers\CommandeController@show');
     Route::put('/{id}', 'App\Http\Controllers\CommandeController@update');
     Route::delete('/{id}', 'App\Http\Controllers\CommandeController@destroy');
+    Route::put('/status/{id}', 'App\Http\Controllers\CommandeController@modifyStatus');
+    Route::put('/validate/{id}', 'App\Http\Controllers\CommandeController@validation');
 });

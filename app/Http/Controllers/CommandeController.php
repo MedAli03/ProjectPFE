@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Commande;
 use Illuminate\Http\Request;
+use Illuminate\Validation\Rule;
 
 class CommandeController extends Controller
 {
@@ -70,4 +71,20 @@ class CommandeController extends Controller
             'message' => 'Commande deleted successfully'
         ]);
     }
+
+    public function modifyStatus(Request $request, $id)
+    {
+        $commande = Commande::findOrFail($id);
+        $commande->status = $request->input('status');
+        $commande->save();
+    
+        return response()->json([
+            'message' => 'Commande status updated successfully',
+            'data' => $commande
+        ]);
+    }
+
+    
+
+    
 }
