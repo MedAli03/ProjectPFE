@@ -4,12 +4,20 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
+
+    public function index()
+{
+    $users = User::all();
+    return response()->json($users);
+}
+
     public function register(Request $request)
 {
     $validator = Validator::make($request->all(), [
@@ -53,27 +61,63 @@ class UserController extends Controller
 
     $user->save();
 
-    return response()->json(['message' => 'User registered successfully'], 201);
+    return response()->json([
+        'message' => 'User registered successfully',
+        
+    ], 201);
 }
 
 public function login(Request $request)
 {
-    $request->validate([
+    $validator = Validator::make($request->all(), [
         'email' => 'required|email',
         'password' => 'required',
     ]);
 
-    $user = User::where('email', $request->email)->first();
-
-    if (! $user || ! Auth::attempt(['email' => $request->email, 'password' => $request->password])) {
-        throw ValidationException::withMessages([
-            'email' => ['The provided credentials are incorrect.'],
-        ]);
+    if ($validator->fails()) {
+        return response()->json(['errors' => $validator->errors()], 400);
     }
 
-    $token = $user->createToken($request->device_name)->plainTextToken;
+    $user = User::where('email', $request->email)->first();
 
-    return response()->json(['message' => 'User login successfully'], 201);
+    if (!$user || !Hash::check($request->password, $user->password)) {
+        return response()->json(['message' => 'Invalid email or password'], 401);
+    }
+
+    if (!$user->is_active) {
+        return response()->json(['message' => 'Account is inactive'], 401);
+    }
+
+    $token = $user->createToken('auth_token')->plainTextToken;
+
+    return response()->json([
+        'message' => "Login successfully",
+        'access_token' => $token
+    ]);
+}
+
+public function activatePressingAccount($id)
+{
+    // Retrieve the user with the specified ID
+    $user = User::findOrFail($id);
+
+    // Check if the user is a pressing and is not already activated
+    if ($user->role === 'pressing' && !$user->is_active) {
+        // Activate the user
+        $user->is_active = true;
+        $user->save();
+
+        // Return a success response
+        return response()->json(['message' => 'Pressing account activated successfully'], 200);
+    } else {
+        // Return an error response
+        return response()->json(['error' => 'Unable to activate pressing account'], 400);
+    }
 }
 
 }
+
+
+//$token = $user->createToken('auth_token')->plainTextToken;
+
+
