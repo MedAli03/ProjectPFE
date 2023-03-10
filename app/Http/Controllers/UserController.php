@@ -4,10 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
@@ -18,19 +16,40 @@ class UserController extends Controller
     return response()->json($users);
 }
 
-    public function register(Request $request)
+public function show($id)
 {
+    // Find the user by ID
+    $user = User::find($id);
+
+    // Check if the user exists
+    if (!$user) {
+        return response()->json(['error' => 'User not found'], 404);
+    }
+
+    return response()->json($user, 200);
+}
+
+public function update(Request $request, $id)
+{
+    // Find the user by ID
+    $user = User::find($id);
+
+    // Check if the user exists
+    if (!$user) {
+        return response()->json(['error' => 'User not found'], 404);
+    }
+
     $validator = Validator::make($request->all(), [
-        'email' => 'required|email|unique:users,email',
-        'phone' => 'required|unique:users,phone',
+        'email' => 'required|email|unique:users,email,' . $id,
+        'phone' => 'required|unique:users,phone,' . $id,
         'password' => 'required|min:8',
         'address' => 'required',
         'city' => 'required',
         'country' => 'required',
         'postal_code' => 'required',
         'role' => 'required|in:client,pressing,admin',
-        'first_name' => $request->role === 'client' ? 'required' : '',
-        'last_name' => $request->role === 'client' ? 'required' : '',
+        'first_name' => $request->role === 'client'||'admin' ? 'required' : '',
+        'last_name' => $request->role === 'client'||'admin' ? 'required' : '',
         'pressing_name' => $request->role === 'pressing' ? 'required' : '',
         'tva' => $request->role === 'pressing' ? 'required' : '',
     ]);
@@ -39,7 +58,6 @@ class UserController extends Controller
         return response()->json(['errors' => $validator->errors()], 400);
     }
 
-    $user = new User;
     $user->email = $request->email;
     $user->phone = $request->phone;
     $user->password = bcrypt($request->password);
@@ -51,49 +69,40 @@ class UserController extends Controller
     $user->is_active = $request->role === 'pressing' ? false : true;
     $user->is_validated = $request->role === 'pressing' ? false : true;
 
-    if ($request->role === 'client') {
+    if ($request->role === 'client'||'admin') {
         $user->first_name = $request->first_name;
         $user->last_name = $request->last_name;
-    } else {
+        $user->pressing_name = null;
+        $user->tva = null;
+    } elseif ($request->role === 'pressing') {
         $user->pressing_name = $request->pressing_name;
         $user->tva = $request->tva;
-    }
+        $user->first_name = null;
+        $user->last_name = null;
+    } 
 
     $user->save();
 
     return response()->json([
-        'message' => 'User registered successfully',
-        
-    ], 201);
+        'message' => 'User updated successfully',
+        'user' => $user,
+    ], 200);
 }
 
-public function login(Request $request)
+
+public function destroy($id)
 {
-    $validator = Validator::make($request->all(), [
-        'email' => 'required|email',
-        'password' => 'required',
-    ]);
+    // Find the user by ID
+    $user = User::find($id);
 
-    if ($validator->fails()) {
-        return response()->json(['errors' => $validator->errors()], 400);
+    if (!$user) {
+        return response()->json(['error' => 'User not found'], 404);
     }
 
-    $user = User::where('email', $request->email)->first();
+    // Delete the user
+    $user->delete();
 
-    if (!$user || !Hash::check($request->password, $user->password)) {
-        return response()->json(['message' => 'Invalid email or password'], 401);
-    }
-
-    if (!$user->is_active) {
-        return response()->json(['message' => 'Account is inactive'], 401);
-    }
-
-    $token = $user->createToken('auth_token')->plainTextToken;
-
-    return response()->json([
-        'message' => "Login successfully",
-        'access_token' => $token
-    ]);
+    return response()->json(['message' => 'User deleted successfully'], 200);
 }
 
 public function activatePressingAccount($id)
@@ -101,8 +110,13 @@ public function activatePressingAccount($id)
     // Retrieve the user with the specified ID
     $user = User::findOrFail($id);
 
-    // Check if the user is a pressing and is not already activated
-    if ($user->role === 'pressing' && !$user->is_active) {
+      // Check if the user is a pressing
+      if ($user->role === 'pressing') {
+        // Check if the account is already activated
+        if ($user->is_active) {
+            return response()->json(['error' => 'This account is already activated'], 400);
+        }
+
         // Activate the user
         $user->is_active = true;
         $user->save();
@@ -116,8 +130,4 @@ public function activatePressingAccount($id)
 }
 
 }
-
-
-//$token = $user->createToken('auth_token')->plainTextToken;
-
 

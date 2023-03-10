@@ -15,8 +15,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 
-Route::post('/register', 'App\Http\Controllers\UserController@register');
-Route::post('/login', 'App\Http\Controllers\UserController@login');
+Route::post('/register', 'App\Http\Controllers\AuthController@register');
+Route::post('/login', 'App\Http\Controllers\AuthController@login');
 
 
    
@@ -24,13 +24,14 @@ Route::post('/activate/{id}', 'App\Http\Controllers\UserController@activatePress
 
 
 
-Route::prefix('pressing')->group(function () {
+Route::prefix('commande')->group(function () {
 
-    Route::get('/', 'App\Http\Controllers\PressingController@index');
-    Route::post('/', 'App\Http\Controllers\PressingController@store');
-    Route::get('/{id}', 'App\Http\Controllers\PressingController@show');
-    Route::put('/{id}', 'App\Http\Controllers\PressingController@update');
-    Route::delete('/{id}', 'App\Http\Controllers\PressingController@destroy');
+    Route::get('/', 'App\Http\Controllers\CommandeController@index');
+    Route::post('/', 'App\Http\Controllers\CommandeController@store');
+    Route::post('/', 'App\Http\Controllers\CommandeController@store');
+    Route::get('/{id}', 'App\Http\Controllers\CommandeController@show');
+    Route::put('/{id}', 'App\Http\Controllers\CommandeController@update');
+    Route::delete('/{id}', 'App\Http\Controllers\CommandeController@destroy');
 });
 
 
@@ -50,6 +51,8 @@ Route::prefix('pressing')->group(function () {
 Route::group(['middleware' => ['auth:sanctum', 'role:admin']],function () {
     
     Route::post('/activate/{id}', 'App\Http\Controllers\UserController@activatePressingAccount');
+    Route::get('/users/{id}', 'App\Http\Controllers\UserController@show');
+    Route::put('/users/{id}', 'App\Http\Controllers\UserController@update');
 });
 
 
@@ -57,7 +60,19 @@ Route::group(['middleware' => ['auth:sanctum', 'role:admin']],function () {
 // Client routes
 Route::group(['middleware' => ['auth:sanctum', 'role:client']],function () {
     
-    Route::get('/users', 'App\Http\Controllers\UserController@index');
+    // Route::get('/users', 'App\Http\Controllers\UserController@index');
+
+    Route::prefix('clients')->group(function () {
+        Route::get('/', 'App\Http\Controllers\ClientController@index');
+        Route::get('/{id}', 'App\Http\Controllers\ClientController@show');
+        Route::put('/{id}', 'App\Http\Controllers\ClientController@update');
+        Route::delete('/{id}', 'App\Http\Controllers\ClientController@destroy');
+    });
+
+    Route::prefix('pressings')->group(function () {
+        Route::get('/', 'App\Http\Controllers\PressingController@index');
+        Route::get('/{id}', 'App\Http\Controllers\PressingController@show');
+    });
 
     Route::prefix('rating')->group(function () {
     Route::get('/', 'App\Http\Controllers\RatingController@index');
@@ -73,7 +88,19 @@ Route::group(['middleware' => ['auth:sanctum', 'role:client']],function () {
 // Pressing routes
 Route::group(['middleware' => ['auth:sanctum', 'role:pressing']],function () {
     
-    Route::get('/users', 'App\Http\Controllers\UserController@index');
+    // Route::get('/users', 'App\Http\Controllers\UserController@index');
+
+    Route::prefix('pressings')->group(function () {
+        Route::get('/', 'App\Http\Controllers\PressingController@index');
+        Route::get('/{id}', 'App\Http\Controllers\PressingController@show');
+        Route::put('/{id}', 'App\Http\Controllers\PressingController@update');
+        Route::delete('/{id}', 'App\Http\Controllers\PressingController@destroy');
+    });
+
+    Route::prefix('clients')->group(function () {
+        Route::get('/', 'App\Http\Controllers\ClientController@index');
+        Route::get('/{id}', 'App\Http\Controllers\ClientController@show');
+    });
 
     Route::prefix('article')->group(function () {
         Route::get('/', 'App\Http\Controllers\ArticleController@index');
