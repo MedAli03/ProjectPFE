@@ -21,8 +21,13 @@ class AuthController extends Controller
 {
     $validator = Validator::make($request->all(), [
         'email' => 'required|email|unique:users,email',
-        'phone' => 'required|unique:users,phone',
-        'password' => 'required|min:8',
+        'phone' => 'required|:users,phone',
+        'password' => [
+            'required',
+            'string',
+            'min:8',
+            'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/'
+        ],
         'address' => 'required',
         'city' => 'required',
         'country' => 'required',
@@ -41,7 +46,7 @@ class AuthController extends Controller
     $user = new User;
     $user->email = $request->email;
     $user->phone = $request->phone;
-    $user->password = bcrypt($request->password);
+    $user->password = bcrypt($request->password);   
     $user->address = $request->address;
     $user->city = $request->city;
     $user->country = $request->country;

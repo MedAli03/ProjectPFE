@@ -59,6 +59,7 @@ Route::group(['middleware' => ['auth:sanctum', 'role:admin']],function () {
         Route::get('/users/{id}', 'App\Http\Controllers\UserController@show');
         Route::put('/users/{id}', 'App\Http\Controllers\UserController@update');
         Route::post('/logout', 'App\Http\Controllers\AuthController@logout');
+        Route::post('/addadmin', 'App\Http\Controllers\AdminController@createAdminUser');
     });
    
 });

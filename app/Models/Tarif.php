@@ -27,4 +27,10 @@ class Tarif extends Model
     {
     return $this->belongsTo(User::class, 'id_pressing')->where('role', 'pressing');
     }
+
+    public function commandes()
+{
+    return $this->belongsToMany(Commande::class)
+        ->withPivot('quantity', 'price');
+}
 }

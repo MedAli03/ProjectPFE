@@ -29,4 +29,16 @@ class Commande extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function tarifs()
+    {
+        return $this->belongsToMany(Tarif::class)
+            ->withPivot('quantity', 'price');
+    }
+
+    public function facture()
+    {
+        return $this->hasOne(Facture::class);
+    }
+
 }
