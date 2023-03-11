@@ -19,6 +19,7 @@ Route::post('/register', 'App\Http\Controllers\AuthController@register');
 Route::post('/login', 'App\Http\Controllers\AuthController@login');
 
 
+
    
 Route::post('/activate/{id}', 'App\Http\Controllers\UserController@activatePressingAccount');
 
@@ -50,9 +51,16 @@ Route::prefix('commande')->group(function () {
 // Admin routes
 Route::group(['middleware' => ['auth:sanctum', 'role:admin']],function () {
     
-    Route::post('/activate/{id}', 'App\Http\Controllers\UserController@activatePressingAccount');
-    Route::get('/users/{id}', 'App\Http\Controllers\UserController@show');
-    Route::put('/users/{id}', 'App\Http\Controllers\UserController@update');
+    Route::prefix('admin')->group(function () {
+
+        Route::post('/activate/{id}', 'App\Http\Controllers\AdminController@activatePressingAccount');
+        Route::get('/', 'App\Http\Controllers\AdminController@getPressingsNotActive');
+        
+        Route::get('/users/{id}', 'App\Http\Controllers\UserController@show');
+        Route::put('/users/{id}', 'App\Http\Controllers\UserController@update');
+        Route::post('/logout', 'App\Http\Controllers\AuthController@logout');
+    });
+   
 });
 
 
