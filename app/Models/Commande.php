@@ -13,21 +13,24 @@ class Commande extends Model
 
         'client_id',
         'pressing_id',
-        'article_id',
-        'service_id',
         'tarif_id',
         'status',
         'quantity',
-        'total_price',
+       
 
        
         
         // add more attributes here as needed
     ];
 
-    public function user()
+    public function client()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'client_id')->where('role', 'client');
+    }
+
+    public function pressing()
+    {
+        return $this->belongsTo(User::class, 'pressing_id')->where('role', 'pressing');
     }
 
     public function tarifs()

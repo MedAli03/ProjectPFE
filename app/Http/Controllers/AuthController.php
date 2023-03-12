@@ -33,8 +33,8 @@ class AuthController extends Controller
         'country' => 'required',
         'postal_code' => 'required',
         'role' => 'required|in:client,pressing,admin',
-        'first_name' => $request->role === 'client' ? 'required' : '',
-        'last_name' => $request->role === 'client' ? 'required' : '',
+        'first_name' => $request->role === 'client'||'admin' ? 'required' : '',
+        'last_name' => $request->role === 'client'||'admin'  ? 'required' : '',
         'pressing_name' => $request->role === 'pressing' ? 'required' : '',
         'tva' => $request->role === 'pressing' ? 'required' : '',
     ]);
@@ -55,7 +55,7 @@ class AuthController extends Controller
     $user->is_active = $request->role === 'pressing' ? false : true;
     $user->is_validated = $request->role === 'pressing' ? false : true;
 
-    if ($request->role === 'client') {
+    if ($request->role === 'client'||'admin' ) {
         $user->first_name = $request->first_name;
         $user->last_name = $request->last_name;
     } else {

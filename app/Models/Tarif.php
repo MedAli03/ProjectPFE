@@ -10,7 +10,10 @@ class Tarif extends Model
     use HasFactory;
 
     protected $fillable = [
-        'price'
+        'price',
+        'id_service',
+        'id_article',
+        'id_pressing'
     ];
 
     public function service()

@@ -11,29 +11,24 @@ return new class extends Migration
      */
     public function up()
 {
-    Schema::create('commandes', function (Blueprint $table) {
+    Schema::create('ratings', function (Blueprint $table) {
         $table->id();
         $table->unsignedBigInteger('client_id');
         $table->unsignedBigInteger('pressing_id');
-        $table->unsignedBigInteger('article_id');
-        $table->unsignedBigInteger('service_id');
-        $table->string('status')->default('pending');
-        $table->integer('quantity');
-        $table->decimal('total_price');
+        $table->integer('value');
         $table->timestamps();
 
         $table->foreign('client_id')->references('id')->on('users')->onDelete('cascade');
         $table->foreign('pressing_id')->references('id')->on('users')->onDelete('cascade');
-        $table->foreign('article_id')->references('id')->on('articles')->onDelete('cascade');
-        $table->foreign('service_id')->references('id')->on('services')->onDelete('cascade');
     });
 }
+
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('commande');
+        Schema::dropIfExists('rating');
     }
 };
