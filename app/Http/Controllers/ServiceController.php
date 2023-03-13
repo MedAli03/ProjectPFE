@@ -13,6 +13,46 @@ class ServiceController extends Controller
         $services = Service::all();
         return response()->json(['services' => $services]);
     }
+    
+
+public function getServicesForPressing($pressing_id)
+{
+    // Retrieve the services available at the given pressing
+    $services = Service::where('pressing_id', $pressing_id)->get();
+
+    // Check if the services are empty
+    if ($services->isEmpty()) {
+        return response()->json([
+            'message' => 'No services available at the given pressing'
+        ], 404);
+    }
+
+    // Return the services to the client user
+    return response()->json([
+        'services' => $services
+    ]);
+}
+
+public function getServicesForCurrentUserPressing(Request $request) {
+    // Get the current user's pressing_id
+    $pressing_id = $request->user()->id;
+
+    // Retrieve the services available at the current user's pressing
+    $services = Service::where('pressing_id', $pressing_id)->get();
+
+    // Check if the services are empty
+    if ($services->isEmpty()) {
+        return response()->json([
+            'message' => 'No services available'
+        ], 404);
+    }
+
+    // Return the services to the pressing user
+    return response()->json([
+        'services' => $services
+    ]);
+}
+
 
     public function store(Request $request)
     {

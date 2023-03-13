@@ -16,7 +16,7 @@ return new class extends Migration
         $table->unsignedBigInteger('client_id');
         $table->unsignedBigInteger('pressing_id');
         $table->unsignedBigInteger('tarif_id');
-        $table->string('status')->default('pending');
+        $table->string('status')->default('en attente');
         $table->integer('quantity');
         $table->timestamps();
 

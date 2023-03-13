@@ -25,25 +25,6 @@ Route::post('/activate/{id}', 'App\Http\Controllers\UserController@activatePress
 
 
 
-Route::prefix('commande')->group(function () {
-
-    Route::get('/', 'App\Http\Controllers\CommandeController@index');
-    Route::post('/', 'App\Http\Controllers\CommandeController@store');
-    Route::post('/', 'App\Http\Controllers\CommandeController@store');
-    Route::get('/{id}', 'App\Http\Controllers\CommandeController@show');
-    Route::put('/{id}', 'App\Http\Controllers\CommandeController@update');
-    Route::delete('/{id}', 'App\Http\Controllers\CommandeController@destroy');
-});
-
-
-// Route::prefix('rating')->group(function () {
-
-//     Route::get('/', 'App\Http\Controllers\RatingController@index');
-//     Route::post('/', 'App\Http\Controllers\RatingController@store');
-//     Route::get('/{id}', 'App\Http\Controllers\RatingController@show');
-//     Route::put('/{id}', 'App\Http\Controllers\RatingController@update');
-//     Route::delete('/{id}', 'App\Http\Controllers\RatingController@destroy');
-// });
 
 
 
@@ -69,8 +50,10 @@ Route::group(['middleware' => ['auth:sanctum', 'role:admin']],function () {
 // Client routes
 Route::group(['middleware' => ['auth:sanctum', 'role:client']],function () {
     
+    Route::post('/logout', 'App\Http\Controllers\AuthController@logout');
     // Route::get('/users', 'App\Http\Controllers\UserController@index');
-
+Route::prefix('client')->group(function () {
+   
     Route::prefix('clients')->group(function () {
         Route::get('/', 'App\Http\Controllers\ClientController@index');
         Route::get('/{id}', 'App\Http\Controllers\ClientController@show');
@@ -79,7 +62,7 @@ Route::group(['middleware' => ['auth:sanctum', 'role:client']],function () {
     });
 
     Route::prefix('pressings')->group(function () {
-        Route::get('/', 'App\Http\Controllers\PressingController@index');
+        Route::get('/all', 'App\Http\Controllers\PressingController@activePressings');
         Route::get('/{id}', 'App\Http\Controllers\PressingController@show');
     });
 
@@ -91,6 +74,23 @@ Route::group(['middleware' => ['auth:sanctum', 'role:client']],function () {
     Route::delete('/{id}', 'App\Http\Controllers\RatingController@deleteRate');
 });
 
+Route::prefix('commande')->group(function () {
+
+    Route::get('/', 'App\Http\Controllers\CommandeController@getCommandsByClient');
+    Route::post('/', 'App\Http\Controllers\CommandeController@store');
+    Route::get('/{id}', 'App\Http\Controllers\CommandeController@show');
+    Route::delete('/delete/{id}', 'App\Http\Controllers\CommandeController@deletePendingCommande');
+}); 
+
+Route::prefix('service')->group(function () {
+    Route::get('/{id}', 'App\Http\Controllers\ServiceController@getServicesForPressing');
+});
+  
+});
+
+
+
+
 });
 
 
@@ -98,17 +98,13 @@ Route::group(['middleware' => ['auth:sanctum', 'role:client']],function () {
 Route::group(['middleware' => ['auth:sanctum', 'role:pressing']],function () {
     
     // Route::get('/users', 'App\Http\Controllers\UserController@index');
+Route::prefix('pressing')->group(function () {
 
     Route::prefix('pressings')->group(function () {
         Route::get('/', 'App\Http\Controllers\PressingController@index');
         Route::get('/{id}', 'App\Http\Controllers\PressingController@show');
         Route::put('/{id}', 'App\Http\Controllers\PressingController@update');
         Route::delete('/{id}', 'App\Http\Controllers\PressingController@destroy');
-    });
-
-    Route::prefix('clients')->group(function () {
-        Route::get('/', 'App\Http\Controllers\ClientController@index');
-        Route::get('/{id}', 'App\Http\Controllers\ClientController@show');
     });
 
     Route::prefix('article')->group(function () {
@@ -118,6 +114,24 @@ Route::group(['middleware' => ['auth:sanctum', 'role:pressing']],function () {
         Route::put('/{id}', 'App\Http\Controllers\ArticleController@update');
         Route::delete('/{id}', 'App\Http\Controllers\ArticleController@destroy');
     });
+
+    Route::prefix('service')->group(function () {
+        Route::get('/', 'App\Http\Controllers\ServiceController@index');
+        Route::post('/', 'App\Http\Controllers\ServiceController@store');
+        Route::get('/all', 'App\Http\Controllers\ServiceController@getPressingPrivateServices');
+        Route::put('/{id}', 'App\Http\Controllers\ServiceController@update');
+        Route::delete('/{id}', 'App\Http\Controllers\ServiceController@destroy');
+    });
+
+    Route::prefix('commande')->group(function () {
+
+        Route::get('/', 'App\Http\Controllers\CommandeController@getCommandsByPressing');
+        Route::get('/{id}', 'App\Http\Controllers\CommandeController@show');
+        Route::put('/status/{id}', 'App\Http\Controllers\CommandeController@modifyStatus');
+        Route::post('/invoice/{id}', 'App\Http\Controllers\CommandeController@addingInvoice');
+    });
+    
+});
     
 });
 

@@ -103,4 +103,11 @@ class PressingController extends Controller
 
     return response()->json(['message' => 'User deleted successfully'], 200);
 }
+
+public function activePressings()
+{
+    return User::where('role', 'pressing')
+        ->where('is_active', true)
+        ->get();
+}
 }

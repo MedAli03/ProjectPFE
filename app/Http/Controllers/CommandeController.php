@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Facture;
 use App\Models\Commande;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
@@ -13,6 +14,24 @@ class CommandeController extends Controller
         $commandes = Commande::all();
         return response()->json($commandes);
     }
+
+    public function getCommandsByClient(Request $request)
+{
+    $client = $request->user();
+
+    $commandes = Commande::where('client_id', $client->id)->get();
+
+    return response()->json($commandes);
+}
+
+public function getCommandsByPressing(Request $request)
+{
+    $pressing = $request->user();
+
+    $commandes = Commande::where('pressing_id', $pressing->id)->get();
+
+    return response()->json($commandes);
+}
 
     public function store(Request $request)
     {
@@ -87,6 +106,50 @@ class CommandeController extends Controller
         ]);
     }
 
+    public function deletePendingCommande($id)
+{
+    $commande = Commande::where('id', $id)->where('status', 'en attente')->first();
+
+    if (!$commande) {
+        return response()->json([
+            'message' => 'Commande not found or cannot be deleted because status is not "en attente"'
+        ], 404);
+    }
+
+    $commande->delete();
+
+    return response()->json([
+        'message' => 'Commande deleted successfully'
+    ]);
+}
+
+public function addingInvoice(Request $request, $id)
+{
+    $commande = Commande::find($id);
+
+    if (!$commande) {
+        return response()->json([
+            'message' => 'Commande not found'
+        ], 404);
+    }
+
+    $pressing = $commande->pressing;
+    $client = $commande->client;
+
+    $facture = Facture::create([
+        'commande_id' => $commande->id,
+        'client_id' => $client->id,
+        'pressing_id' => $pressing->id,
+        'numero' => $request->numero,
+        'date' => $request->date,
+        'total' => $commande->total_price,
+    ]);
+
+    return response()->json([
+        'message' => 'Commande added to Facture successfully',
+        'facture' => $facture
+    ]);
+}
     
 
     
