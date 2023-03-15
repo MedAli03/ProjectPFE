@@ -20,22 +20,22 @@ class ArticleController extends Controller
     }
 
     public function store(Request $request)
-{
-    $validatedData = $request->validate([
-        'name' => 'required|string',
-        'img' => 'required|string'
-    ]);
+    {
+        $validatedData = $request->validate([
+            'name' => 'required|string',
+            'img' => 'required|string'
+        ]);
 
-    $articleExists = Article::where('name', $validatedData['name'])->exists();
+        $articleExists = Article::where('name', $validatedData['name'])->exists();
 
-    if ($articleExists) {
-        return response()->json(['message' => 'Article already exists'], 422);
+        if ($articleExists) {
+            return response()->json(['message' => 'Article already exists'], 422);
+        }
+
+        $article = Article::create($validatedData);
+
+        return response()->json($article, 201);
     }
-
-    $article = Article::create($validatedData);
-
-    return response()->json($article, 201);
-}
 
     public function update(Request $request, $id)
     {

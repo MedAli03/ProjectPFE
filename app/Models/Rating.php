@@ -16,13 +16,19 @@ class Rating extends Model
         'value'
     ];
 
-    public function client()
-    {
+    // public static function calculateAverageRating($pressingId){
+
+    //     return Rating::where('pressing_id', $pressingId)->avg('value');
+    // }
+
+
+    public function client(){
+        
         return $this->belongsTo(User::class, 'client_id')->where('role', 'client');
     }
 
-    public function pressing()
-    {
+    public function pressing(){
+
         return $this->belongsTo(User::class, 'pressing_id')->where('role', 'pressing');
     }
 }

@@ -30,6 +30,7 @@ class User extends Authenticatable
         'first_name',
         'last_name',
         'pressing_name',
+        // 'average_rating',
         'tva',
         'is_validated',
     ];

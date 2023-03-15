@@ -17,11 +17,14 @@ class AuthController extends Controller
     return response()->json($users);
 }
 
-    public function register(Request $request)
+public function register(Request $request)
 {
     $validator = Validator::make($request->all(), [
         'email' => 'required|email|unique:users,email',
-        'phone' => 'required|:users,phone',
+        'phone' => [
+            'required',
+            'regex:/^[+]?[0-9]{8,15}$/'
+        ],
         'password' => [
             'required',
             'string',
@@ -33,10 +36,10 @@ class AuthController extends Controller
         'country' => 'required',
         'postal_code' => 'required',
         'role' => 'required|in:client,pressing,admin',
-        'first_name' => $request->role === 'client'||'admin' ? 'required' : '',
-        'last_name' => $request->role === 'client'||'admin'  ? 'required' : '',
-        'pressing_name' => $request->role === 'pressing' ? 'required' : '',
-        'tva' => $request->role === 'pressing' ? 'required' : '',
+        'first_name' => ($request->role === 'client' || $request->role === 'admin') ? 'required' : '',
+        'last_name' => ($request->role === 'client' || $request->role === 'admin') ? 'required' : '',
+        'pressing_name' => ($request->role === 'pressing') ? 'required' : '',
+        'tva' => ($request->role === 'pressing') ? 'required' : '',
     ]);
 
     if ($validator->fails()) {
@@ -52,13 +55,13 @@ class AuthController extends Controller
     $user->country = $request->country;
     $user->postal_code = $request->postal_code;
     $user->role = $request->role;
-    $user->is_active = $request->role === 'pressing' ? false : true;
-    $user->is_validated = $request->role === 'pressing' ? false : true;
+    $user->is_active = ($request->role === 'pressing') ? false : true;
+    $user->is_validated = ($request->role === 'pressing') ? false : true;
 
-    if ($request->role === 'client'||'admin' ) {
+    if ($request->role === 'client' || $request->role === 'admin') {
         $user->first_name = $request->first_name;
         $user->last_name = $request->last_name;
-    } else {
+    } else if ($request->role === 'pressing') {
         $user->pressing_name = $request->pressing_name;
         $user->tva = $request->tva;
     }
@@ -66,8 +69,7 @@ class AuthController extends Controller
     $user->save();
 
     return response()->json([
-        'message' => 'User registered successfully',
-        
+        'message' => 'User registered successfully',      
     ], 201);
 }
 

@@ -89,7 +89,6 @@ public function update(Request $request, $id)
     ], 200);
 }
 
-
 public function destroy($id)
 {
     // Find the user by ID
