@@ -92,33 +92,32 @@ class PressingController extends Controller
         ]);
     
         return response()->json($pressing, 200);
-    }
-       
+    }    
 
     public function destroy(User $pressing,$id)
-{
-        // Find the user by ID
-        $pressing = User::find($id);
-        
-    if (!$pressing) {
-        return response()->json(['error' => 'Pressing not found'], 404);
+    {
+            // Find the user by ID
+            $pressing = User::find($id);
+            
+        if (!$pressing) {
+            return response()->json(['error' => 'Pressing not found'], 404);
+            }
+
+        // Check if the user has the role of "pressing"
+        if ($pressing->role !== 'pressing') {
+            return response()->json(['error' => 'This user is not a pressing'], 403);
         }
 
-    // Check if the user has the role of "pressing"
-    if ($pressing->role !== 'pressing') {
-        return response()->json(['error' => 'This user is not a pressing'], 403);
+        // Delete the user
+        $pressing->delete();
+
+        return response()->json(['message' => 'User deleted successfully'], 200);
     }
 
-    // Delete the user
-    $pressing->delete();
-
-    return response()->json(['message' => 'User deleted successfully'], 200);
-}
-
-public function activePressings()
-{
-    return User::where('role', 'pressing')
-        ->where('is_active', true)
-        ->get();
-}
+    public function activePressings()
+    {
+        return User::where('role', 'pressing')
+            ->where('is_active', true)
+            ->get();
+    }
 }

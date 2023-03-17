@@ -9,7 +9,9 @@ class Service extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name','pressing_id'];
+    protected $fillable = ['name','pressing_id',
+    // 'is_available'
+];
 
     public function pressing()
     {

@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('services', function (Blueprint $table) {
             $table->id();
             $table->string('name');
+            // $table->boolean('is_available')->default(false);
             $table->unsignedBigInteger('pressing_id');
             $table->timestamps();
 

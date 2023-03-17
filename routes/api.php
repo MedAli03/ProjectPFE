@@ -41,10 +41,8 @@ Route::group(['middleware' => ['auth:sanctum', 'role:client']],function () {
     Route::prefix('client')->group(function () {
     
         Route::prefix('clients')->group(function () {
-            Route::get('/', 'App\Http\Controllers\ClientController@index');
             Route::get('/{id}', 'App\Http\Controllers\ClientController@show');
             Route::put('/{id}', 'App\Http\Controllers\ClientController@update');
-            Route::delete('/{id}', 'App\Http\Controllers\ClientController@destroy');
         });
 
         Route::prefix('pressings')->group(function () {
@@ -62,8 +60,8 @@ Route::group(['middleware' => ['auth:sanctum', 'role:client']],function () {
         });
 
         Route::prefix('commande')->group(function () {
-            Route::get('/', 'App\Http\Controllers\CommandeController@getCommandsByClient');
-            Route::post('/', 'App\Http\Controllers\CommandeController@store');
+            Route::get('/all', 'App\Http\Controllers\CommandeController@getCommandsByClient');
+            Route::post('/add', 'App\Http\Controllers\CommandeController@store');
             Route::get('/{id}', 'App\Http\Controllers\CommandeController@show');
             Route::delete('/delete/{id}', 'App\Http\Controllers\CommandeController@deletePendingCommande');
         }); 
@@ -71,6 +69,11 @@ Route::group(['middleware' => ['auth:sanctum', 'role:client']],function () {
         Route::prefix('service')->group(function () {
             Route::get('/{id}', 'App\Http\Controllers\ServiceController@getServicesForPressing');
         });
+
+        Route::prefix('article')->group(function () {
+            Route::get('/all', 'App\Http\Controllers\ArticleController@getCommandsByClient');
+            Route::get('/{id}', 'App\Http\Controllers\ArticleController@show');
+        }); 
 
     });
 
