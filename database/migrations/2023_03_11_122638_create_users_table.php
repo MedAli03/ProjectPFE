@@ -26,6 +26,8 @@ return new class extends Migration
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
             $table->string('pressing_name')->nullable();
+            // $table->string('average_rating')->nullable();
+            // $table->string('number_of_raters')->nullable();
             $table->string('tva')->nullable();
             $table->boolean('is_validated')->default(true);
             $table->rememberToken();

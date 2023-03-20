@@ -9,15 +9,12 @@ use Illuminate\Support\Facades\Validator;
 
 class ServiceController extends Controller
 {
-    public function index()
-    {
+    public function index(){
         $services = Service::all();
         return response()->json(['services' => $services]);
     }
-    
 
-    public function getServicesForPressing($pressing_id)
-    {
+    public function getServicesForPressing($pressing_id){
         // Retrieve the services available at the given pressing
         $services = Service::where('pressing_id', $pressing_id)->get();
 
@@ -54,9 +51,7 @@ class ServiceController extends Controller
         ]);
     }
 
-
-    public function store(Request $request)
-    {
+    public function store(Request $request){
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             // 'is_available' => 'in:true,false'
@@ -73,10 +68,8 @@ class ServiceController extends Controller
     
         return response()->json(['message' => 'Service created successfully'], 201);
     }
-    
 
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request, $id){
         $validator = Validator::make($request->all(), [
             'name' => 'required',
             // 'is_available' => 'in:true,false,null'
@@ -98,11 +91,8 @@ class ServiceController extends Controller
     
         return response()->json(['message' => 'Service updated successfully'], 200);
     }
-    
 
-
-    public function destroy($id)
-    {
+    public function destroy($id){
         $service = Service::find($id);
         if (!$service) {
             return response()->json(['error' => 'Service not found'], 404);

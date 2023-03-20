@@ -16,6 +16,7 @@ class Commande extends Model
         'tarif_id',
         'status',
         'quantity',
+        'total_price',
        
 
        

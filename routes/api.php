@@ -25,18 +25,20 @@ Route::group(['middleware' => ['auth:sanctum', 'role:admin']],function () {
     Route::prefix('admin')->group(function () {
         Route::post('/activate/{id}', 'App\Http\Controllers\AdminController@activatePressingAccount');
         Route::get('/', 'App\Http\Controllers\AdminController@getPressingsNotActive');
-        Route::get('/users/{id}', 'App\Http\Controllers\UserController@show');
-        Route::put('/users/{id}', 'App\Http\Controllers\UserController@update');
+        Route::get('/user/{id}', 'App\Http\Controllers\UserController@show');
+        Route::put('/user/{id}', 'App\Http\Controllers\UserController@update');
         Route::post('/logout', 'App\Http\Controllers\AuthController@logout');
         Route::post('/addadmin', 'App\Http\Controllers\AdminController@createAdminUser');
     });
    
 });
 
+
 // Client routes
 Route::group(['middleware' => ['auth:sanctum', 'role:client']],function () {
 
     Route::post('/logout', 'App\Http\Controllers\AuthController@logout');
+  
 
     Route::prefix('client')->group(function () {
     
@@ -51,10 +53,7 @@ Route::group(['middleware' => ['auth:sanctum', 'role:client']],function () {
         });
 
         Route::prefix('rating')->group(function () {
-            Route::get('/', 'App\Http\Controllers\RatingController@index');
-            Route::get('/average', 'App\Http\Controllers\RatingController@ratingAverage');
             Route::post('/rate/{id}', 'App\Http\Controllers\RatingController@rate');
-            Route::get('/{id}', 'App\Http\Controllers\RatingController@show');
             Route::put('/update/{id}', 'App\Http\Controllers\RatingController@updateRating');
             Route::delete('/{id}', 'App\Http\Controllers\RatingController@deleteRate');
         });
@@ -75,9 +74,21 @@ Route::group(['middleware' => ['auth:sanctum', 'role:client']],function () {
             Route::get('/{id}', 'App\Http\Controllers\ArticleController@show');
         }); 
 
+        Route::prefix('tarif')->group(function () {
+            Route::get('/', 'App\Http\Controllers\TarifController@index');
+            Route::get('/{id}', 'App\Http\Controllers\TarifController@show');
+        });
+
+        Route::prefix('facture')->group(function () {
+            Route::get('/', 'App\Http\Controllers\FactureController@index');
+            Route::get('/{id}', 'App\Http\Controllers\FactureController@show');
+            Route::delete('/{id}', 'App\Http\Controllers\FactureController@destroy');
+        });
+
     });
 
 });
+
 
 // Pressing routes
 Route::group(['middleware' => ['auth:sanctum', 'role:pressing']],function () {
@@ -90,7 +101,6 @@ Route::group(['middleware' => ['auth:sanctum', 'role:pressing']],function () {
             Route::get('/', 'App\Http\Controllers\PressingController@index');
             Route::get('/{id}', 'App\Http\Controllers\PressingController@show');
             Route::put('/update/{id}', 'App\Http\Controllers\PressingController@updatePressingProfile');
-            Route::delete('/{id}', 'App\Http\Controllers\PressingController@destroy');
         });
 
         Route::prefix('article')->group(function () {
@@ -104,7 +114,7 @@ Route::group(['middleware' => ['auth:sanctum', 'role:pressing']],function () {
         Route::prefix('service')->group(function () {
             Route::get('/', 'App\Http\Controllers\ServiceController@index');
             Route::post('/', 'App\Http\Controllers\ServiceController@store');
-            Route::get('/all', 'App\Http\Controllers\ServiceController@getPressingPrivateServices');
+            Route::get('/all', 'App\Http\Controllers\ServiceController@getServicesForCurrentUserPressing');
             Route::put('/{id}', 'App\Http\Controllers\ServiceController@update');
             Route::delete('/{id}', 'App\Http\Controllers\ServiceController@destroy');
         });
@@ -117,6 +127,20 @@ Route::group(['middleware' => ['auth:sanctum', 'role:pressing']],function () {
             Route::post('/invoice/{id}', 'App\Http\Controllers\CommandeController@addingInvoice');
         });
         
+        Route::prefix('tarif')->group(function () {
+            Route::get('/', 'App\Http\Controllers\TarifController@index');
+            Route::post('/', 'App\Http\Controllers\TarifController@store');
+            Route::get('/{id}', 'App\Http\Controllers\TarifController@show');
+            Route::put('/{id}', 'App\Http\Controllers\TarifController@update');
+            Route::delete('/{id}', 'App\Http\Controllers\TarifController@destroy');
+        });
+
+        Route::prefix('facture')->group(function () {
+            Route::get('/', 'App\Http\Controllers\FactureController@index');
+            Route::get('/{id}', 'App\Http\Controllers\FactureController@show');
+            Route::put('/{id}', 'App\Http\Controllers\FactureController@update');
+            Route::delete('/{id}', 'App\Http\Controllers\FactureController@destroy');
+        });
     });
         
 });

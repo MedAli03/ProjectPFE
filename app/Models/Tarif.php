@@ -32,8 +32,8 @@ class Tarif extends Model
     }
 
     public function commandes()
-{
-    return $this->belongsToMany(Commande::class)
-        ->withPivot('quantity', 'price');
-}
+    {
+        return $this->belongsToMany(Commande::class)
+            ->withPivot('quantity', 'price');
+    }
 }

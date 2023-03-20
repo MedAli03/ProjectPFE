@@ -7,20 +7,17 @@ use App\Models\Tarif;
 
 class TarifController extends Controller
 {
-    public function index()
-    {
+    public function index(){
         $tarifs = Tarif::all();
         return response()->json($tarifs);
     }
 
-    public function show($id)
-    {
+    public function show($id){
         $tarif = Tarif::findOrFail($id);
         return response()->json($tarif);
     }
 
-    public function store(Request $request)
-    {
+    public function store(Request $request){
         $validatedData = $request->validate([
             'price' => 'required|numeric',
             'id_service' => 'exists:services,id',
@@ -33,8 +30,7 @@ class TarifController extends Controller
         return response()->json($tarif, 201);
     }
 
-    public function update(Request $request, $id)
-    {
+    public function update(Request $request, $id){
         $validatedData = $request->validate([
             'price' => 'required|numeric',
             'id_service' => 'exists:services,id',
@@ -48,8 +44,7 @@ class TarifController extends Controller
         return response()->json($tarif, 200);
     }
 
-    public function destroy($id)
-    {
+    public function destroy($id){
         $tarif = Tarif::findOrFail($id);
         $tarif->delete();
 

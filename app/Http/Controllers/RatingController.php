@@ -9,12 +9,14 @@ use Illuminate\Http\Request;
 class RatingController extends Controller
 {
     /**
+     * 
+     * 
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
-    {
+
+    public function index(){
         $ratings = Rating::all();
         return response()->json($ratings);
     }
@@ -25,8 +27,7 @@ class RatingController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
-    {
+    public function show($id){
         $rating = Rating::find($id);
         if (!$rating) {
             return response()->json([
@@ -37,8 +38,19 @@ class RatingController extends Controller
         return response()->json($rating);
     }
 
-    public function rate(Request $request, $id_pressing)
+    public static function calculateAverageRating($pressing_id)
     {
+        $totalRating = Rating::where('pressing_id', $pressing_id)->sum('value');
+        $numberOfRatings = User::where('id', $pressing_id)->value('number_of_raters');
+    
+        if ($numberOfRatings > 0) {
+            return $totalRating / $numberOfRatings;
+        } else {
+            return 0;
+        }
+    }
+    
+    public function rate(Request $request, $id_pressing){
         $validatedData = $request->validate([
             'value' => 'required|numeric|min:1|max:5'
         ]);
@@ -63,20 +75,15 @@ class RatingController extends Controller
         $rating->pressing()->associate($pressing);
         $rating->save();
 
-
-        
-        // $pressing = User::find($id_pressing);
-        // if ($pressing) {
-        //     $averageRating = Rating::calculateAverageRating($id_pressing);
-        //     $pressing->average_rating = $averageRating;
-        //     $pressing->save();
-        // }
+        // update the pressing's average rating and number of raters
+        $pressing->number_of_raters += 1;
+        $pressing->average_rating = Rating::calculateAverageRating($id_pressing);
+        $pressing->save();
 
         return response()->json($rating, 201);
     }
 
-    public function updateRating(Request $request, $pressing_id)
-    {
+    public function updateRating(Request $request, $pressing_id){
         // Get the authenticated user
         $user = auth()->user();
 
@@ -100,19 +107,10 @@ class RatingController extends Controller
             'rating' => $request->input('rating')
         ]);
 
-        // $pressing = User::find($pressing_id);
-        // if ($pressing) {
-        //     $averageRating = Rating::calculateAverageRating($pressing_id);
-        //     $pressing->average_rating = $averageRating;
-        //     $pressing->save();
-        // }
-
-
         return response()->json($existingRating);
     }
 
-    public function deleteRate(Request $request, $id)
-    {
+    public function deleteRate($id){
         $rate = Rating::findOrFail($id);
 
         // check if the authenticated user is the owner of the rate
@@ -124,19 +122,6 @@ class RatingController extends Controller
 
         return response()->json(null, 204);
     }
-
-    public function ratingAverage()
-{
-    $pressings = User::where('role', 'pressing')->get();
-
-    $ratings = Rating::whereIn('pressing_id', $pressings->pluck('id'))->get();
-
-    $averages = $ratings->groupBy('pressing_id')->map(function ($group) {
-        return $group->avg('value');
-    });
-
-    return response()->json($averages);
-}
 
 
 }

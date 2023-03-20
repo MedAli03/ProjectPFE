@@ -30,9 +30,9 @@ class ClientController extends Controller
           // Find the user by ID
           $client = User::find($id);
 
-          // If the pressing is not found, return a 404 error
+          // If the client is not found, return a 404 error
           if (!$client) {
-          return response()->json(['error' => 'Pressing not found'], 404);
+          return response()->json(['error' => 'client not found'], 404);
           }
         
         if ($client->role !== 'client') {
@@ -52,7 +52,7 @@ class ClientController extends Controller
     {
 
         if (!$client) {
-            return response()->json(['error' => 'Pressing not found'], 404);
+            return response()->json(['error' => 'client not found'], 404);
             }
         
         if ($client->role !== 'client') {
@@ -61,8 +61,16 @@ class ClientController extends Controller
 
         $validator = Validator::make($request->all(), [
             'email' => 'required|email|unique:users,email,'.$id,
-            'phone' => 'required|unique:users,phone,'.$id,
-            'password' => 'required|min:8',
+            'phone' => [
+                'required',
+                'regex:/^[+]?[0-9]{8,15}$/'
+            ],
+            'password' => [
+                'required',
+                'string',
+                'min:8',
+                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/'
+            ],
             'address' => 'required',
             'city' => 'required',
             'country' => 'required',

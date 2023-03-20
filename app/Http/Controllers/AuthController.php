@@ -55,6 +55,8 @@ public function register(Request $request)
     $user->country = $request->country;
     $user->postal_code = $request->postal_code;
     $user->role = $request->role;
+    // $user->average_rating = null; number_of_raters
+    // $user->number_of_raters = null;
     $user->is_active = ($request->role === 'pressing') ? false : true;
     $user->is_validated = ($request->role === 'pressing') ? false : true;
 

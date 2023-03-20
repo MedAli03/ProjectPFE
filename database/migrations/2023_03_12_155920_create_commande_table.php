@@ -18,6 +18,7 @@ return new class extends Migration
         $table->unsignedBigInteger('tarif_id');
         $table->string('status')->default('en attente');
         $table->integer('quantity');
+        $table->integer('total_price');
         $table->timestamps();
 
         $table->foreign('client_id')->references('id')->on('users')->onDelete('cascade');

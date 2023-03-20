@@ -24,13 +24,4 @@ class Article extends Model
         return $this->belongsToMany(Service::class)->withPivot('name');
     }
 
-    public function pressings()
-    {
-        return $this->belongsToMany(User::class);
-    }
-
-    public function commandes()
-    {
-        return $this->belongsToMany(Commande::class);
-    }
 }

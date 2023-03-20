@@ -44,7 +44,7 @@ class CommandeController extends Controller
             'quantity' => 'required|integer|min:1',
             'status' => [
                 'required',
-                'in:en attente, annuler, confirmer, en cours, terminer',
+                'in:en attente, en cours, terminer',
                 Rule::default('en attente')
             ],
             'total_amount' => 'required|numeric|min:0',
