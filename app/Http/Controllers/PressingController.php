@@ -16,6 +16,50 @@ class PressingController extends Controller
 
         return response()->json($pressings, 200);
     }
+    /**
+     * Display the specified pressing.
+     *
+     * @OA\Get(
+     *     path="/api/client/pressings/{id}",
+     *     tags={"Client"},
+     *     summary="Display the specified pressing",
+     *     operationId="getPressingById",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of the pressing",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Pressing data"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Forbidden",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="You are not authorized to access this resource.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Pressing not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="Pressing not found")
+     *         )
+     *     )
+     * )
+     */
 
     public function show(User $pressing,$id)
     {
@@ -114,6 +158,36 @@ class PressingController extends Controller
         return response()->json(['message' => 'User deleted successfully'], 200);
     }
 
+    /**
+     * Get a list of active pressings.
+     *
+     * @OA\Get(
+     *     path="/api/client/pressings/all",
+     *     tags={"Client"},
+     *     summary="Get a list of active pressings",
+     *     operationId="getActivePressings",
+     *     @OA\Response(
+     *         response=200,
+     *         description="List of active pressings"
+     *      
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthorized",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Unauthenticated.")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Forbidden",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="You are not authorized to access this resource.")
+     *         )
+     *     )
+     * )
+     */
+    
     public function activePressings()
     {
         return User::where('role', 'pressing')

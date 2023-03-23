@@ -24,10 +24,10 @@ Route::group(['middleware' => ['auth:sanctum', 'role:admin']],function () {
 
     Route::prefix('admin')->group(function () {
         Route::post('/activate/{id}', 'App\Http\Controllers\AdminController@activatePressingAccount');
-        Route::get('/', 'App\Http\Controllers\AdminController@getPressingsNotActive');
+        Route::put('/update/{id}', 'App\Http\Controllers\AdminController@updateAdminUser');
+        Route::get('/pressingnoactive', 'App\Http\Controllers\AdminController@getPressingsNotActive');
         Route::get('/user/{id}', 'App\Http\Controllers\UserController@show');
         Route::put('/user/{id}', 'App\Http\Controllers\UserController@update');
-        Route::post('/logout', 'App\Http\Controllers\AuthController@logout');
         Route::post('/addadmin', 'App\Http\Controllers\AdminController@createAdminUser');
     });
    
