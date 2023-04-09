@@ -9,6 +9,21 @@ use Illuminate\Support\Facades\Validator;
 
 class PressingController extends Controller
 {
+    /**
+     * @OA\Get(
+     *     path="api/pressing/pressings/",
+     *     summary="Retrieve all users with the role of 'pressing'",
+     *     tags={"Pressing"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="List of users with the role of 'pressing'"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="No users found with the role of 'pressing'"
+     *     )
+     * )
+     */
     public function index()
     {
         // Retrieve all users with the role of "pressing"
@@ -82,6 +97,44 @@ class PressingController extends Controller
         return response()->json($pressing, 200);
     }
 
+
+    /**
+     * @OA\Put(
+     *     path="/pressing/pressings/update/{id}",
+     *     summary="Update a pressing user's profile",
+     *     tags={"Pressing"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of the pressing user to update",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int64"
+     *         )
+     *     ),
+     *     @OA\RequestBody(
+     *         description="Pressing user object that needs to be updated",
+     *         required=true
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Updated pressing user object"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Validation errors occurred"
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="The user is not authorized to update this pressing user object"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="The specified pressing user object was not found"
+     *     )
+     * )
+     */
     public function updatePressingProfile(Request $request, $id)
     {
         // Find the user by ID

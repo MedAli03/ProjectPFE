@@ -70,7 +70,7 @@ Route::group(['middleware' => ['auth:sanctum', 'role:client']],function () {
         });
 
         Route::prefix('article')->group(function () {
-            Route::get('/all', 'App\Http\Controllers\ArticleController@getCommandsByClient');
+            Route::get('/all', 'App\Http\Controllers\ArticleController@index');
             Route::get('/{id}', 'App\Http\Controllers\ArticleController@show');
         }); 
 
@@ -82,7 +82,6 @@ Route::group(['middleware' => ['auth:sanctum', 'role:client']],function () {
         Route::prefix('facture')->group(function () {
             Route::get('/', 'App\Http\Controllers\FactureController@index');
             Route::get('/{id}', 'App\Http\Controllers\FactureController@show');
-            Route::delete('/{id}', 'App\Http\Controllers\FactureController@destroy');
         });
 
     });

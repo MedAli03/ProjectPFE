@@ -16,53 +16,43 @@ class AuthController extends Controller
         $users = User::all();
         return response()->json($users);
     }
-  /**
-* Register a new user.
-*
-* @SWG\Post(
-* path="/api/register",
-* tags={"Authentication"},
-* summary="Register a new user",
-* operationId="register",
-* consumes={"application/json"},
-* produces={"application/json"},
-* @SWG\Parameter(
-* name="request",
-* in="body",
-* description="User object that needs to be registered",
-* required=true,
-* @SWG\Schema(
-* @SWG\Property(property="email", type="string", example="johndoe@example.com"),
-* @SWG\Property(property="cin", type="integer", example="12345678"),
-* @SWG\Property(property="phone", type="string", example="+1234567890"),
-* @SWG\Property(property="password", type="string", example="Abcd1234"),
-* @SWG\Property(property="address", type="string", example="123 Main St"),
-* @SWG\Property(property="city", type="string", example="Los Angeles"),
-* @SWG\Property(property="country", type="string", example="USA"),
-* @SWG\Property(property="postal_code", type="string", example="12345"),
-* @SWG\Property(property="role", type="string", example="client", enum={"client", "pressing", "admin"}),
-* @SWG\Property(property="first_name", type="string", example="John", required=false),
-* @SWG\Property(property="last_name", type="string", example="Doe", required=false),
-* @SWG\Property(property="pressing_name", type="string", example="ABC Pressing", required=false),
-* @SWG\Property(property="tva", type="string", example="123456789", required=false),
-* )
-* ),
-* @SWG\Response(
-* response=201,
-* description="User registered successfully",
-* @SWG\Schema(
-* @SWG\Property(property="message", type="string", example="User registered successfully")
-* )
-* ),
-* @SWG\Response(
-* response=400,
-* description="Invalid input",
-* @SWG\Schema(
-* @SWG\Property(property="errors", type="object", example={"email": {"The email field is required."}})
-* )
-* )
-* )
-*/
+    /**
+     * @OA\Post(
+     *     path="/api/register",
+     *     summary="Register a new user",
+     *     tags={"Authentication"},
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="User registration details",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="email", type="string", example="john.doe@example.com"),
+     *             @OA\Property(property="cin", type="integer", example="12345678"),
+     *             @OA\Property(property="phone", type="string", example="+1234567890"),
+     *             @OA\Property(property="password", type="string", example="Abc12345"),
+     *             @OA\Property(property="address", type="string", example="123 Main Street"),
+     *             @OA\Property(property="city", type="string", example="New York"),
+     *             @OA\Property(property="country", type="string", example="USA"),
+     *             @OA\Property(property="postal_code", type="string", example="10001"),
+     *             @OA\Property(property="role", type="string", example="client", enum={"client", "pressing", "admin"}),
+     *             @OA\Property(property="first_name", type="string", example="John", nullable=true),
+     *             @OA\Property(property="last_name", type="string", example="Doe", nullable=true),
+     *             @OA\Property(property="pressing_name", type="string", example="Acme Pressing", nullable=true),
+     *             @OA\Property(property="tva", type="string", example="1234567890", nullable=true)
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=201,
+     *         description="User registered successfully"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Validation errors in the request body",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="errors", type="object")
+     *         )
+     *     )
+     * )
+     */
 
     public function register(Request $request)
     {

@@ -228,6 +228,355 @@
                 }
             }
         },
+        "/api/client/article/all": {
+            "get": {
+                "tags": [
+                    "Client"
+                ],
+                "summary": "Get all articles",
+                "operationId": "68ebf81a801a4d1ab11f1f34214c7f46",
+                "responses": {
+                    "200": {
+                        "description": "List of articles"
+                    },
+                    "500": {
+                        "description": "Server error"
+                    }
+                }
+            }
+        },
+        "/api/client/article/{id}": {
+            "get": {
+                "tags": [
+                    "Client"
+                ],
+                "summary": "Get an article by ID",
+                "description": "Get the article with the specified ID.",
+                "operationId": "getArticleById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the article to get",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Article response"
+                    },
+                    "404": {
+                        "description": "Article not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Article not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "api/pressing/article": {
+            "post": {
+                "tags": [
+                    "Pressing"
+                ],
+                "summary": "Create a new article",
+                "description": "Create a new article with a given name and image",
+                "operationId": "createArticle",
+                "requestBody": {
+                    "description": "Provide name and image for the new article",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "img"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Article Name"
+                                    },
+                                    "img": {
+                                        "type": "string",
+                                        "example": "https://example.com/image.jpg"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Article created successfully"
+                    },
+                    "400": {
+                        "description": "Bad request",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Unprocessable entity",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Article already exists"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "500": {
+                        "description": "Server error"
+                    }
+                }
+            }
+        },
+        "api/pressings/article/{id}": {
+            "put": {
+                "tags": [
+                    "Pressing"
+                ],
+                "summary": "Update an article",
+                "description": "Update an article by ID",
+                "operationId": "9c990e7daeb557e3b6f3e9d86f584f60",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the article to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "name": {
+                                        "type": "string"
+                                    },
+                                    "img": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "The updated article"
+                    },
+                    "404": {
+                        "description": "Article not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Article not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Invalid data provided",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "The given data was invalid"
+                                        },
+                                        "errors": {
+                                            "type": "object",
+                                            "nullable": true
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Pressing"
+                ],
+                "summary": "Delete an article by ID",
+                "operationId": "51271c95e0f42eb1d8821917c7291925",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the article to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "No content"
+                    },
+                    "404": {
+                        "description": "Article not found"
+                    }
+                },
+                "security": [
+                    {
+                        "Bearer": []
+                    }
+                ]
+            }
+        },
+        "/api/register": {
+            "post": {
+                "tags": [
+                    "Authentication"
+                ],
+                "summary": "Register a new user",
+                "operationId": "8a56853624e025573120a09a4c75d468",
+                "requestBody": {
+                    "description": "User registration details",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "example": "john.doe@example.com"
+                                    },
+                                    "cin": {
+                                        "type": "integer",
+                                        "example": "12345678"
+                                    },
+                                    "phone": {
+                                        "type": "string",
+                                        "example": "+1234567890"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "example": "Abc12345"
+                                    },
+                                    "address": {
+                                        "type": "string",
+                                        "example": "123 Main Street"
+                                    },
+                                    "city": {
+                                        "type": "string",
+                                        "example": "New York"
+                                    },
+                                    "country": {
+                                        "type": "string",
+                                        "example": "USA"
+                                    },
+                                    "postal_code": {
+                                        "type": "string",
+                                        "example": "10001"
+                                    },
+                                    "role": {
+                                        "type": "string",
+                                        "enum": [
+                                            "client",
+                                            "pressing",
+                                            "admin"
+                                        ],
+                                        "example": "client"
+                                    },
+                                    "first_name": {
+                                        "type": "string",
+                                        "example": "John",
+                                        "nullable": true
+                                    },
+                                    "last_name": {
+                                        "type": "string",
+                                        "example": "Doe",
+                                        "nullable": true
+                                    },
+                                    "pressing_name": {
+                                        "type": "string",
+                                        "example": "Acme Pressing",
+                                        "nullable": true
+                                    },
+                                    "tva": {
+                                        "type": "string",
+                                        "example": "1234567890",
+                                        "nullable": true
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "User registered successfully"
+                    },
+                    "400": {
+                        "description": "Validation errors in the request body",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
         "/api/login": {
             "post": {
                 "tags": [
@@ -341,6 +690,669 @@
                 ]
             }
         },
+        "/api/client/commande/all": {
+            "get": {
+                "tags": [
+                    "Client"
+                ],
+                "summary": "Get all orders placed by the authenticated client.",
+                "operationId": "c3b27574f5429e6ae7ca4e3f82f98de9",
+                "responses": {
+                    "200": {
+                        "description": "Returns a list of orders placed by the authenticated client"
+                    },
+                    "401": {
+                        "description": "Unauthorized. Authentication failed or client not authenticated"
+                    },
+                    "403": {
+                        "description": "Forbidden. Client does not have permission to perform this action"
+                    },
+                    "404": {
+                        "description": "No orders found for the authenticated client",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No orders found for the authenticated client"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "api/pressings/commande/": {
+            "get": {
+                "tags": [
+                    "Pressing"
+                ],
+                "summary": "Get commands by pressing",
+                "description": "Retrieve a list of commands for the authenticated pressing",
+                "operationId": "getCommandsByPressing",
+                "responses": {
+                    "200": {
+                        "description": "List of commands for the pressing"
+                    },
+                    "401": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/client/commande/add": {
+            "post": {
+                "tags": [
+                    "Client"
+                ],
+                "summary": "Create a new order",
+                "description": "Create a new order",
+                "operationId": "f64d2ce371c5fb2bc366b7a2a32d6dfe",
+                "requestBody": {
+                    "description": "Pass order details",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "client_id",
+                                    "pressing_id",
+                                    "article_id",
+                                    "service_id",
+                                    "quantity",
+                                    "status",
+                                    "total_amount"
+                                ],
+                                "properties": {
+                                    "client_id": {
+                                        "description": "ID of the client who made the order",
+                                        "type": "integer"
+                                    },
+                                    "pressing_id": {
+                                        "description": "ID of the pressing where the order is placed",
+                                        "type": "integer"
+                                    },
+                                    "article_id": {
+                                        "description": "ID of the article that needs to be serviced",
+                                        "type": "integer"
+                                    },
+                                    "service_id": {
+                                        "description": "ID of the service required",
+                                        "type": "integer"
+                                    },
+                                    "quantity": {
+                                        "description": "Quantity of the article that needs to be serviced",
+                                        "type": "integer"
+                                    },
+                                    "status": {
+                                        "description": "Status of the order (en attente, en cours, terminer)",
+                                        "type": "string"
+                                    },
+                                    "total_amount": {
+                                        "description": "Total amount of the order",
+                                        "type": "number"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "New order created successfully"
+                    },
+                    "400": {
+                        "description": "Validation error(s)"
+                    },
+                    "401": {
+                        "description": "Unauthorized"
+                    }
+                },
+                "security": [
+                    {
+                        "bearer_token": []
+                    }
+                ]
+            }
+        },
+        "api/pressings/commande/{id}": {
+            "get": {
+                "tags": [
+                    "Pressing"
+                ],
+                "summary": "Get a single command",
+                "description": "Retrieve details for a single command by ID",
+                "operationId": "getCommand",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the command to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Details of the requested command"
+                    },
+                    "404": {
+                        "description": "Commande not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/client/commande/{id}": {
+            "put": {
+                "tags": [
+                    "Client"
+                ],
+                "summary": "Update a specific commande",
+                "description": "Update a commande identified by the given ID. Only the authenticated client can update their own commandes.",
+                "operationId": "updateCommande",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the commande to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Updated commande data",
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Commande updated successfully"
+                    },
+                    "400": {
+                        "description": "Bad request. Validation errors occurred.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errors": {
+                                            "description": "Validation errors",
+                                            "type": "object",
+                                            "example": {
+                                                "status": [
+                                                    "The status field is required."
+                                                ],
+                                                "quantity": [
+                                                    "The quantity field is required."
+                                                ]
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Unauthorized. The user is not authenticated.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Error message",
+                                            "type": "string",
+                                            "example": "Unauthorized"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Commande not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "description": "Error message",
+                                            "type": "string",
+                                            "example": "Commande not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "api/pressings/commande/status/{id}": {
+            "put": {
+                "tags": [
+                    "Pressing"
+                ],
+                "summary": "Modify the status of a command",
+                "description": "Modify the status of a single command by ID",
+                "operationId": "modifyCommandStatus",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the command to modify",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "New status for the command",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "status": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Details of the modified command",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Commande not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "api/client/commande/delete/{id}": {
+            "delete": {
+                "tags": [
+                    "Client"
+                ],
+                "summary": "Delete a pending commande",
+                "description": "Deletes a commande if it exists and its status is 'en attente'.",
+                "operationId": "c492e39fc45e2fc5f08fd921e606aca1",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "Commande ID",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Success",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Commande deleted successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Commande not found or cannot be deleted because status is not 'en attente'",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Commande not found or cannot be deleted because status is not 'en attente'"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "api/pressings/commande/invoice/{id}": {
+            "post": {
+                "tags": [
+                    "Pressing"
+                ],
+                "summary": "Add an invoice to a command",
+                "description": "Create a new invoice for a single command by ID",
+                "operationId": "addCommandInvoice",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the command to add the invoice to",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Invoice information",
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "numero": {
+                                        "type": "string"
+                                    },
+                                    "date": {
+                                        "type": "string",
+                                        "format": "date"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Details of the new invoice",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Commande not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "api/pressings/facture": {
+            "get": {
+                "tags": [
+                    "Pressing"
+                ],
+                "summary": "Get a list of Factures",
+                "description": "Returns a list of Facture objects based on the authenticated user's role",
+                "operationId": "getFactures",
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "401": {
+                        "description": "Unauthenticated"
+                    },
+                    "403": {
+                        "description": "Invalid user role"
+                    }
+                }
+            }
+        },
+        "api/pressings/facture/{id}": {
+            "get": {
+                "tags": [
+                    "Pressing"
+                ],
+                "summary": "Get a Facture by ID",
+                "description": "Returns a Facture object based on the given ID",
+                "operationId": "getFactureById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the Facture to return",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Facture not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Pressing"
+                ],
+                "summary": "Update a Facture by ID",
+                "description": "Updates a Facture object based on the given ID",
+                "operationId": "updateFactureById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the Facture to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "JSON object containing data to update Facture",
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid request data"
+                    },
+                    "404": {
+                        "description": "Facture not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Pressing"
+                ],
+                "summary": "Delete a facture by ID",
+                "description": "Delete a facture by ID. Requires admin role, or client_id or pressing_id must match authenticated user's ID.",
+                "operationId": "deleteFacture",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the facture to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Facture deleted successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Facture deleted successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "403": {
+                        "description": "You are not authorized to delete this facture",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "You are not authorized to delete this facture"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Facture not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Facture not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "api/pressing/pressings/": {
+            "get": {
+                "tags": [
+                    "Pressing"
+                ],
+                "summary": "Retrieve all users with the role of 'pressing'",
+                "operationId": "21dedb00dbfd2d4e9c81761286e51c5d",
+                "responses": {
+                    "200": {
+                        "description": "List of users with the role of 'pressing'"
+                    },
+                    "404": {
+                        "description": "No users found with the role of 'pressing'"
+                    }
+                }
+            }
+        },
         "/api/client/pressings/{id}": {
             "get": {
                 "tags": [
@@ -411,6 +1423,45 @@
                                 }
                             }
                         }
+                    }
+                }
+            }
+        },
+        "/pressing/pressings/update/{id}": {
+            "put": {
+                "tags": [
+                    "Pressing"
+                ],
+                "summary": "Update a pressing user's profile",
+                "operationId": "d62cf5e670c33ab34d4b79487cc495e6",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the pressing user to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "Pressing user object that needs to be updated",
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Updated pressing user object"
+                    },
+                    "400": {
+                        "description": "Validation errors occurred"
+                    },
+                    "403": {
+                        "description": "The user is not authorized to update this pressing user object"
+                    },
+                    "404": {
+                        "description": "The specified pressing user object was not found"
                     }
                 }
             }
@@ -741,6 +1792,400 @@
                                 }
                             }
                         }
+                    }
+                }
+            }
+        },
+        "api/pressings/service": {
+            "get": {
+                "tags": [
+                    "Pressing"
+                ],
+                "summary": "List all services",
+                "description": "Returns a list of all services.",
+                "operationId": "getServices",
+                "responses": {
+                    "200": {
+                        "description": "List of services",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "services": {}
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Pressing"
+                ],
+                "summary": "Create a new service",
+                "description": "Creates a new service with the given name.",
+                "operationId": "createService",
+                "requestBody": {
+                    "description": "Service object that needs to be created",
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "Service created successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Invalid input data",
+                        "content": {
+                            "application/json": {
+                                "schema": {}
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "api/pressings/service/all": {
+            "get": {
+                "tags": [
+                    "Pressing"
+                ],
+                "summary": "List services available at current user's pressing",
+                "description": "Returns a list of services available at the current user's pressing.",
+                "operationId": "getServicesForCurrentUserPressing",
+                "responses": {
+                    "200": {
+                        "description": "List of services",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "services": {}
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "No services available",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "No services available"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "api/pressings/service/{id}": {
+            "put": {
+                "tags": [
+                    "Pressing"
+                ],
+                "summary": "Update a service",
+                "description": "Updates a service with the given ID.",
+                "operationId": "updateService",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the service to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "New service data",
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Service updated successfully",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Service updated successfully"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Service not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string",
+                                            "example": "Service not found"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Validation errors",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "errors": {
+                                            "type": "object",
+                                            "additionalProperties": {
+                                                "type": "array",
+                                                "items": {
+                                                    "type": "string"
+                                                },
+                                                "property": null
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Pressing"
+                ],
+                "summary": "Delete a service by ID",
+                "description": "Deletes a service from the database by its ID",
+                "operationId": "destroyService",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the service to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Service deleted successfully"
+                    },
+                    "404": {
+                        "description": "Service not found",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "error": {
+                                            "type": "string"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "api/pressings/tarif/": {
+            "get": {
+                "tags": [
+                    "Pressing"
+                ],
+                "summary": "Get all tarifs",
+                "description": "Retrieve a list of all tarifs",
+                "operationId": "getAllTarifs",
+                "responses": {
+                    "200": {
+                        "description": "List of all tarifs"
+                    }
+                }
+            },
+            "post": {
+                "tags": [
+                    "Pressing"
+                ],
+                "summary": "Create a new tarif",
+                "description": "Create a new tarif with the given details",
+                "operationId": "createTarif",
+                "requestBody": {
+                    "description": "Tarif object to be created",
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "New tarif created",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "id": {
+                                            "type": "integer"
+                                        },
+                                        "price": {
+                                            "type": "number"
+                                        },
+                                        "id_service": {
+                                            "type": "integer"
+                                        },
+                                        "id_article": {
+                                            "type": "integer"
+                                        },
+                                        "id_pressing": {
+                                            "type": "integer"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Validation error",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string"
+                                        },
+                                        "errors": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "api/pressings/tarif/{id}": {
+            "get": {
+                "tags": [
+                    "Pressing"
+                ],
+                "summary": "Get a Tarif by ID",
+                "description": "Returns a Tarif object corresponding to the provided ID",
+                "operationId": "getTarifById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the Tarif to retrieve",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Tarif not found"
+                    }
+                }
+            },
+            "put": {
+                "tags": [
+                    "Pressing"
+                ],
+                "summary": "Update a Tarif by ID",
+                "description": "Updates a Tarif object corresponding to the provided ID",
+                "operationId": "updateTarifById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the Tarif to update",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "description": "The new information for the Tarif",
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "Successful operation"
+                    },
+                    "400": {
+                        "description": "Invalid input"
+                    },
+                    "404": {
+                        "description": "Tarif not found"
+                    }
+                }
+            },
+            "delete": {
+                "tags": [
+                    "Pressing"
+                ],
+                "summary": "Delete a Tarif by ID",
+                "description": "Deletes a Tarif object corresponding to the provided ID",
+                "operationId": "deleteTarifById",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID of the Tarif to delete",
+                        "required": true,
+                        "schema": {
+                            "type": "integer",
+                            "format": "int64"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Successful operation"
+                    },
+                    "404": {
+                        "description": "Tarif not found"
                     }
                 }
             }

@@ -9,10 +9,48 @@ use Illuminate\Support\Facades\Auth;
 class FactureController extends Controller
 {
     /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
+     * @OA\Get(
+     *     path="/api/client/facture/",
+     *     summary="Get all factures for the authenticated user",
+     *     tags={"Client"},
+     *     description="Returns a list of all factures for the authenticated user, either a client or a pressing",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Response(
+     *         response=200,
+     *         description="A list of factures"
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Invalid user role",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="Invalid user role")
+     *         )
+     *     )
+     * )
      */
+
+    /**
+     * @OA\Get(
+     *     path="api/pressings/facture",
+     *     summary="Get a list of Factures",
+     *     description="Returns a list of Facture objects based on the authenticated user's role",
+     *     operationId="getFactures",
+     *     tags={"Pressing"},
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation"
+     *     ),
+     *     @OA\Response(
+     *         response=401,
+     *         description="Unauthenticated",
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="Invalid user role"
+     *     )
+     * )
+     */
+
     public function index()
     {
         // Get the authenticated user
@@ -58,23 +96,100 @@ class FactureController extends Controller
     }
 
     /**
-     * Display the specified resource.
+     * Retrieve the specified Facture.
      *
-     * @param  \App\Models\Facture  $facture
-     * @return \Illuminate\Http\Response
+     * @OA\Get(
+     *     path="/api/client/facture/{id}",
+     *     tags={"Client"},
+     *     summary="Retrieve a Facture",
+     *     description="Retrieves the specified Facture by ID.",
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of the Facture to retrieve",
+     *         required=true,
+     *         @OA\Schema(type="integer")
+     *     ),
+     *     @OA\Response(
+     *         response="200",
+     *         description="Successful operation"
+     *     ),
+     *     @OA\Response(
+     *         response="404",
+     *         description="Facture not found"
+     *     )
+     * )
      */
+
+    /**
+     * @OA\Get(
+     *     path="api/pressings/facture/{id}",
+     *     summary="Get a Facture by ID",
+     *     description="Returns a Facture object based on the given ID",
+     *     operationId="getFactureById",
+     *     tags={"Pressing"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of the Facture to return",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int64"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Facture not found"
+     *     )
+     * )
+     */
+
     public function show(Facture $facture)
     {
         return response()->json($facture, 200);
     }
 
     /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Facture  $facture
-     * @return \Illuminate\Http\Response
+     * @OA\Put(
+     *     path="api/pressings/facture/{id}",
+     *     summary="Update a Facture by ID",
+     *     description="Updates a Facture object based on the given ID",
+     *     operationId="updateFactureById",
+     *     tags={"Pressing"},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of the Facture to update",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int64"
+     *         )
+     *     ),
+     *     @OA\RequestBody(
+     *         required=true,
+     *         description="JSON object containing data to update Facture"
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Successful operation"
+     *     ),
+     *     @OA\Response(
+     *         response=400,
+     *         description="Invalid request data"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Facture not found"
+     *     )
+     * )
      */
+
     public function update(Request $request, Facture $facture)
     {
         // Validate the request data
@@ -94,10 +209,45 @@ class FactureController extends Controller
     }
 
     /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Facture  $facture
-     * @return \Illuminate\Http\Response
+     * @OA\Delete(
+     *     path="api/pressings/facture/{id}",
+     *     tags={"Pressing"},
+     *     summary="Delete a facture by ID",
+     *     description="Delete a facture by ID. Requires admin role, or client_id or pressing_id must match authenticated user's ID.",
+     *     operationId="deleteFacture",
+     *     security={{"bearerAuth":{}}},
+     *     @OA\Parameter(
+     *         name="id",
+     *         in="path",
+     *         description="ID of the facture to delete",
+     *         required=true,
+     *         @OA\Schema(
+     *             type="integer",
+     *             format="int64"
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Facture deleted successfully",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="message", type="string", example="Facture deleted successfully")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=403,
+     *         description="You are not authorized to delete this facture",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="You are not authorized to delete this facture")
+     *         )
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Facture not found",
+     *         @OA\JsonContent(
+     *             @OA\Property(property="error", type="string", example="Facture not found")
+     *         )
+     *     )
+     * )
      */
     public function destroy($id)
     {
