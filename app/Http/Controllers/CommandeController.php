@@ -77,13 +77,14 @@ class CommandeController extends Controller
      * )
      */
     public function getCommandsByPressing(Request $request)
-    {
-        $pressing = $request->user();
+{
+    $pressing = $request->user();
 
-        $commandes = Commande::where('pressing_id', $pressing->id)->get();
+    $commandes = Commande::with('client')->where('pressing_id', $pressing->id)->orderBy('created_at', 'desc')->get();
 
-        return response()->json($commandes);
-    }
+    return response()->json($commandes);
+}
+
 
     /**
         * @OA\Post(
@@ -523,6 +524,23 @@ class CommandeController extends Controller
         ]);
     }
     
+
+    public function markAsInProgress($id){
+        $commande = Commande::findOrFail($id);
+
+        $commande->update(['status' => 'en cours']);
+
+        return response()->json($commande, 200);
+    }
+
+    public function terminer($id){
+        $commande = Commande::findOrFail($id);
+
+        $commande->update(['status' => 'terminée']);
+
+        return response()->json($commande, 200);
+    }
+
 
     
 }

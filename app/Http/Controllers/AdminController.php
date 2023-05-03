@@ -37,6 +37,13 @@ class AdminController extends Controller
         return response()->json($users);
     }
 
+    public function getClients() {
+        $clients = User::where('role', 'client')->get();
+        return response()->json([
+            'clients' => $clients
+        ], 200);
+    }
+
     /**
          * @OA\Post(
          *     path="/admin/activate/{id}",

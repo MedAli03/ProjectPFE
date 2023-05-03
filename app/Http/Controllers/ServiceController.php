@@ -35,9 +35,11 @@ class ServiceController extends Controller
         return response()->json(['services' => $services]);
     }
 
-    public function getServicesForPressing($pressing_id){
+    public function getServicesForPressing(Request $request ){
         // Retrieve the services available at the given pressing
-        $services = Service::where('pressing_id', $pressing_id)->get();
+        $pressing = $request->user();
+
+        $services = Service::where('pressing_id', $pressing->id)->get();
 
         // Check if the services are empty
         if ($services->isEmpty()) {

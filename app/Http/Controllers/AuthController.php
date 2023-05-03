@@ -58,12 +58,12 @@ class AuthController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'email' => 'required|email|unique:users,email',
-            'cin' => [
-                'required',
-                'numeric',
-                'digits:8',
-                'unique:users,cin'
-            ],
+            // 'cin' => [
+            //     'required',
+            //     'numeric',
+            //     'digits:8',
+            //     'unique:users,cin'
+            // ],
             'phone' => [
                 'required',
                 'regex:/^[+]?[0-9]{8,15}$/'
@@ -91,7 +91,7 @@ class AuthController extends Controller
     
         $user = new User;
         $user->email = $request->email;
-        $user->cin = $request->cin;
+        // $user->cin = $request->cin;
         $user->phone = $request->phone;
         $user->password = bcrypt($request->password);   
         $user->address = $request->address;
@@ -208,10 +208,11 @@ class AuthController extends Controller
         }
 
         $token = $user->createToken('auth_token')->plainTextToken;
-
+        $role = $user->role;
         return response()->json([
             'message' => "Login successfully",
-            'access_token' => $token
+            'access_token' => $token,
+            'role' => $role
         ]);
     }
 

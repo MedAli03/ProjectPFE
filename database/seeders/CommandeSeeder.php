@@ -4,7 +4,6 @@ namespace Database\Seeders;
 
 use App\Models\Commande;
 use Illuminate\Database\Seeder;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class CommandeSeeder extends Seeder
 {
@@ -13,7 +12,6 @@ class CommandeSeeder extends Seeder
      */
     public function run(): void
     {
-        $commandes = Commande::factory()->count(10)->create();
-       
+        $commandes = Commande::factory()->count(50)->create();
     }
 }

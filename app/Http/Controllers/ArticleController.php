@@ -24,10 +24,10 @@ class ArticleController extends Controller
      */
 
     public function index()
-    {
-        $articles = Article::all();
-        return response()->json($articles);
-    }
+     {
+         $articles = Article::select('id', 'name')->get();
+         return response()->json($articles);
+     }
 
     /**
      * @OA\Get(
@@ -114,8 +114,7 @@ class ArticleController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'name' => 'required|string',
-            'img' => 'required|string'
+            'name' => 'required|string'
         ]);
 
         $articleExists = Article::where('name', $validatedData['name'])->exists();
@@ -196,7 +195,6 @@ class ArticleController extends Controller
     {
         $validatedData = $request->validate([
             'name' => 'required|string',
-            'img' => 'required|string'
         ]);
 
         $article = Article::findOrFail($id);

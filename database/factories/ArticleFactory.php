@@ -13,7 +13,6 @@ class ArticleFactory extends Factory
     {
         return [
             'name' => $this->faker->word,
-            'img' => $this->faker->imageUrl(),
         ];
     }
 

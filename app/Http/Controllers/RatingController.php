@@ -294,4 +294,31 @@ class RatingController extends Controller
     }
 
 
+    // public function getRating($id_pressing) {
+    //     // find the authenticated pressing
+    //     $pressing = auth()->user();
+    
+    //     // check if the pressing has any ratings
+    //     $ratings = $pressing->pressing()->where('client_id', '!=', null)->get();
+    //     if ($ratings->isEmpty()) {
+    //         return response()->json(['message' => 'No ratings found for this pressing'], 404);
+    //     }
+    
+    //     // filter the ratings to get only those for the current pressing
+    //     $pressingRatings = $ratings->filter(function ($rating) use ($id_pressing) {
+    //         return $rating->client->role == 'client' && $rating->pressing_id == $id_pressing;
+    //     });
+    
+    //     // check if there are any ratings for the pressing
+    //     if ($pressingRatings->isEmpty()) {
+    //         return response()->json(['message' => 'No ratings found for this pressing'], 404);
+    //     }
+    
+    //     // calculate the pressing's average rating
+    //     $averageRating = $pressingRatings->avg('value');
+    
+    //     return response()->json(['average_rating' => $averageRating, 'number_of_raters' => $pressing->number_of_raters], 200);
+    // }
+    
+
 }
