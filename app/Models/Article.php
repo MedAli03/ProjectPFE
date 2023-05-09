@@ -10,7 +10,8 @@ class Article extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name'
+        'name',
+        'is_available '
     ];
 
     public function tarifs()
@@ -18,9 +19,9 @@ class Article extends Model
         return $this->belongsToMany(Tarif::class)->withPivot('price');
     }
 
-    public function services()
-    {
-        return $this->belongsToMany(Service::class)->withPivot('name');
-    }
+    // public function services()
+    // {
+    //     return $this->belongsToMany(Service::class)->withPivot('name');
+    // }
 
 }

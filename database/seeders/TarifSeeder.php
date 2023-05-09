@@ -13,6 +13,6 @@ class TarifSeeder extends Seeder
      */
     public function run(): void
     {
-        $tariffs = Tarif::factory()->count(10)->create();
+        $tariffs = Tarif::factory()->count(50)->create();
     }
 }

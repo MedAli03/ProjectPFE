@@ -41,7 +41,7 @@ Route::group(['middleware' => ['auth:sanctum', 'role:admin']], function () {
 
         //  service
         Route::get('/service/all', 'App\Http\Controllers\ServiceController@index');
-
+        Route::post('/', 'App\Http\Controllers\ServiceController@store');
         
 
     });
@@ -64,11 +64,11 @@ Route::group(['middleware' => ['auth:sanctum', 'role:client']], function () {
         Route::prefix('pressings')->group(function () {
             Route::get('/all', 'App\Http\Controllers\PressingController@activePressings');
             Route::get('/{id}', 'App\Http\Controllers\PressingController@show');
+            
         });
 
         Route::prefix('rating')->group(function () {
             Route::post('/rate/{id}', 'App\Http\Controllers\RatingController@rate');
-            Route::put('/update/{id}', 'App\Http\Controllers\RatingController@updateRating');
             Route::delete('/{id}', 'App\Http\Controllers\RatingController@deleteRate');
         });
 
@@ -116,15 +116,25 @@ Route::group(['middleware' => ['auth:sanctum', 'role:pressing']], function () {
 
         Route::prefix('article')->group(function () {
             Route::get('/', 'App\Http\Controllers\ArticleController@index');
+            Route::get('/notavailable', 'App\Http\Controllers\ArticleController@getNotAvailableArticle');
+
+            Route::post('/add', 'App\Http\Controllers\ArticleController@store');
+            Route::post('/frompressing', 'App\Http\Controllers\ArticleController@storeFromPressing');
+
             Route::get('/{id}', 'App\Http\Controllers\ArticleController@show');
             Route::put('/{id}', 'App\Http\Controllers\ArticleController@update');
             Route::delete('/{id}', 'App\Http\Controllers\ArticleController@destroy');
         });
 
         Route::prefix('service')->group(function () {
-            Route::get('/', 'App\Http\Controllers\ServiceController@index');
-            Route::post('/', 'App\Http\Controllers\ServiceController@store');
-            Route::get('/all', 'App\Http\Controllers\ServiceController@getServicesForCurrentUserPressing');
+            Route::get('/', 'App\Http\Controllers\ServiceController@getAvailableServices');
+            Route::get('/notavailable', 'App\Http\Controllers\ServiceController@getServicesNotAvailable');
+
+           
+            Route::post('/frompressing', 'App\Http\Controllers\ServiceController@storeFromPressing');
+
+
+            Route::put('/makeavailable/{id}', 'App\Http\Controllers\ServiceController@makeAvailable');
             Route::put('/{id}', 'App\Http\Controllers\ServiceController@update');
             Route::delete('/{id}', 'App\Http\Controllers\ServiceController@destroy');
         });
@@ -141,8 +151,8 @@ Route::group(['middleware' => ['auth:sanctum', 'role:pressing']], function () {
         });
 
         Route::prefix('tarif')->group(function () {
-            Route::get('/', 'App\Http\Controllers\TarifController@index');
-            Route::post('/', 'App\Http\Controllers\TarifController@store');
+            Route::get('/', 'App\Http\Controllers\TarifController@getTarifsForPressing');
+            Route::post('/ajouter', 'App\Http\Controllers\TarifController@store');
             Route::get('/{id}', 'App\Http\Controllers\TarifController@show');
             Route::put('/{id}', 'App\Http\Controllers\TarifController@update');
             Route::delete('/{id}', 'App\Http\Controllers\TarifController@destroy');
@@ -153,6 +163,11 @@ Route::group(['middleware' => ['auth:sanctum', 'role:pressing']], function () {
             Route::get('/{id}', 'App\Http\Controllers\FactureController@show');
             Route::put('/{id}', 'App\Http\Controllers\FactureController@update');
             Route::delete('/{id}', 'App\Http\Controllers\FactureController@destroy');
+        });
+        Route::prefix('rating')->group(function () {
+            Route::get('/', 'App\Http\Controllers\RatingController@pressingGetRatings');
+            Route::get('/m', 'App\Http\Controllers\RatingController@pressingAverageRating');
+
         });
     });
 });

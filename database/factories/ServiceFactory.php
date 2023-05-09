@@ -21,7 +21,7 @@ class ServiceFactory extends Factory
     {
         return [
             'name' => $this->faker->word(),
-            'pressing_id' => User::where('role', 'pressing')->pluck('id')->random()
+            'is_available' => $this->faker->boolean(),
         ];
     }
 }

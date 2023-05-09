@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Log;
 use App\Models\Facture;
 use App\Models\Commande;
 use Illuminate\Http\Request;
@@ -331,6 +332,8 @@ class CommandeController extends Controller
 
     public function destroy($id)
     {
+
+
         $commande = Commande::find($id);
 
         if (!$commande) {

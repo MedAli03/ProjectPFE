@@ -9,16 +9,13 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
+    public function up(): void
     {
         Schema::create('services', function (Blueprint $table) {
             $table->id();
             $table->string('name');
-            // $table->boolean('is_available')->default(false);
-            $table->unsignedBigInteger('pressing_id');
+            $table->boolean('is_available');
             $table->timestamps();
-
-            $table->foreign('pressing_id')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

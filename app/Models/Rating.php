@@ -16,11 +16,6 @@ class Rating extends Model
         'value'
     ];
 
-    // public static function calculateAverageRating($pressingId){
-
-    //     return Rating::where('pressing_id', $pressingId)->avg('value');
-    // }
-
 
     public function client(){
         

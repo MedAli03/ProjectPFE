@@ -12,6 +12,6 @@ class CommandeSeeder extends Seeder
      */
     public function run(): void
     {
-        $commandes = Commande::factory()->count(50)->create();
+        $commandes = Commande::factory()->count(30)->create();
     }
 }

@@ -9,144 +9,64 @@ use Illuminate\Support\Facades\Validator;
 
 class ServiceController extends Controller
 {
-    /**
-     * @OA\Get(
-     *     path="api/pressings/service",
-     *     summary="List all services",
-     *     description="Returns a list of all services.",
-     *     operationId="getServices",
-     *     tags={"Pressing"},
-     *     @OA\Response(
-     *         response=200,
-     *         description="List of services",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(
-     *                 property="services"
 
-     *             )
-     *         )
-     *     )
-     * )
-     */
 
-    public function index(){
-        $services = Service::all();
-        return response()->json(['services' => $services]);
+    public function getAvailableServices()
+    {
+        $services = Service::where('is_available', true)->orderBy('name')->get();
+        return response()->json($services);
     }
 
-    public function getServicesForPressing(Request $request ){
-        // Retrieve the services available at the given pressing
-        $pressing = $request->user();
-
-        $services = Service::where('pressing_id', $pressing->id)->get();
-
-        // Check if the services are empty
-        if ($services->isEmpty()) {
-            return response()->json([
-                'message' => 'No services available at the given pressing'
-            ], 404);
-        }
-
-        // Return the services to the client user
-        return response()->json([
-            'services' => $services
-        ]);
+    public function getServicesNotAvailable()
+    {
+        $services = Service::where('is_available', false)->orderBy('name')->get();
+        return response()->json($services);
     }
-
-    /**
-     * @OA\Get(
-     *     path="api/pressings/service/all",
-     *     summary="List services available at current user's pressing",
-     *     description="Returns a list of services available at the current user's pressing.",
-     *     operationId="getServicesForCurrentUserPressing",
-     *     tags={"Pressing"},
-     *     security={{"bearerAuth": {}}},
-     *     @OA\Response(
-     *         response=200,
-     *         description="List of services",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(
-     *                 property="services"
-     *             )
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="No services available",
-     *         @OA\JsonContent(
-     *             type="object",
-     *             @OA\Property(
-     *                 property="message",
-     *                 type="string",
-     *                 example="No services available"
-     *             )
-     *         )
-     *     )
-     * )
-     */
-
-    public function getServicesForCurrentUserPressing(Request $request) {
-        // Get the current user's pressing_id
-        $pressing_id = $request->user()->id;
-
-        // Retrieve the services available at the current user's pressing
-        $services = Service::where('pressing_id', $pressing_id)->get();
-
-        // Check if the services are empty
-        if ($services->isEmpty()) {
-            return response()->json([
-                'message' => 'No services available'
-            ], 404);
-        }
-
-        // Return the services to the pressing user
-        return response()->json([
-            'services' => $services
-        ]);
-    }
-
-    /**
-     * @OA\Post(
-     *     path="api/pressings/service",
-     *     summary="Create a new service",
-     *     description="Creates a new service with the given name.",
-     *     operationId="createService",
-     *     tags={"Pressing"},
-     *     @OA\RequestBody(
-     *         required=true,
-     *         description="Service object that needs to be created"
-     *     ),
-     *     @OA\Response(
-     *         response=201,
-     *         description="Service created successfully",
-     *         @OA\JsonContent()
-     *     ),
-     *     @OA\Response(
-     *         response=400,
-     *         description="Invalid input data",
-     *         @OA\JsonContent()
-     *     )
-     * )
-     */
-    public function store(Request $request){
-        $validator = Validator::make($request->all(), [
-            'name' => 'required',
-            // 'is_available' => 'in:true,false'
-        ]);
     
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 400);
-        }
+
+    public function store(Request $request)
+    {
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'is_available' => 'sometimes|boolean'
+        ]);
     
         $service = new Service;
-        $service->name = $request->name;
-        // $service->is_available = $request->has('is_available') ? $request->is_available : false;
+        $service->name = $validatedData['name'];
+        $service->is_available = $validatedData['is_available'] ?? true;
         $service->save();
     
-        return response()->json(['message' => 'Service created successfully'], 201);
+        return response()->json($service, 201);
     }
+
+    public function storeFromPressing(Request $request){
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'is_available' => 'sometimes|boolean'
+        ]);
+    
+        $service = new Service;
+        $service->name = $validatedData['name'];
+        $service->is_available = $validatedData['is_available'] ?? false;
+        $service->save();
+    
+        return response()->json($service, 201);
+    }
+    
+
+    public function makeAvailable($id) {
+        $service = Service::find($id);
+    
+        if (!$service) {
+            return response()->json(['message' => 'Service not found'], 404);
+        }
+    
+        $service->is_available = true;
+        $service->save();
+    
+        return response()->json(['message' => 'Service updated successfully'], 200);
+    }
+    
 
 
     /**

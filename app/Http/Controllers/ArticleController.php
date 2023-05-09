@@ -7,27 +7,19 @@ use App\Models\Article;
 
 class ArticleController extends Controller
 {
-    /**
-     * @OA\Get(
-     *     path="/api/client/article/all",
-     *     summary="Get all articles",
-     *     tags={"Client"},
-     *     @OA\Response(
-     *         response="200",
-     *         description="List of articles"
-     *     ),
-     *     @OA\Response(
-     *         response="500",
-     *         description="Server error"
-     *     )
-     * )
-     */
+    
 
     public function index()
-     {
-         $articles = Article::select('id', 'name')->get();
-         return response()->json($articles);
-     }
+    {
+        $articles = Article::where('is_available', true)->orderBy('name')->get();
+        return response()->json($articles);
+    }
+
+    public function getNotAvailableArticle()
+    {
+        $articles = Article::where('is_available', false)->orderBy('name')->get();
+        return response()->json($articles);
+    }
 
     /**
      * @OA\Get(
@@ -114,19 +106,38 @@ class ArticleController extends Controller
     public function store(Request $request)
     {
         $validatedData = $request->validate([
-            'name' => 'required|string'
+            'name' => 'required|string|max:255',
+            'is_available' => 'sometimes|boolean'
         ]);
+    
+        $article = new Article;
+        $article->name = $validatedData['name'];
+        $article->is_available = $validatedData['is_available'] ?? true;
+        $article->save();
+    
+        return response()->json($article, 201);
+    }
 
+    public function storeFromPressing(Request $request){
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'is_available' => 'sometimes|boolean'
+        ]);
+    
         $articleExists = Article::where('name', $validatedData['name'])->exists();
-
+    
         if ($articleExists) {
             return response()->json(['message' => 'Article already exists'], 422);
         }
-
-        $article = Article::create($validatedData);
-
+    
+        $article = new Article;
+        $article->name = $validatedData['name'];
+        $article->is_available = $validatedData['is_available'] ?? false;
+        $article->save();
+    
         return response()->json($article, 201);
     }
+    
 
     
     /**
