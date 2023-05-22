@@ -153,37 +153,6 @@ class ServiceController extends Controller
     }
 
 
-    /**
-     * @OA\Delete(
-     *     path="api/pressings/service/{id}",
-     *     summary="Delete a service by ID",
-     *     description="Deletes a service from the database by its ID",
-     *     operationId="destroyService",
-     *     tags={"Pressing"},
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         description="ID of the service to delete",
-     *         required=true,
-     *         @OA\Schema(
-     *             type="integer"
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response="200",
-     *         description="Service deleted successfully"
-     *     ),
-     *     @OA\Response(
-     *         response="404",
-     *         description="Service not found",
-     *         @OA\JsonContent(
-     *             @OA\Property(property="error", type="string")
-     *         )
-     *     )
-     * )
-     */
-
-
     public function destroy($id){
         $service = Service::find($id);
         if (!$service) {

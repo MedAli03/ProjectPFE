@@ -157,41 +157,6 @@ class CommandeController extends Controller
         return response()->json($commande, 201);
     }
 
-    /**
-     * 
-     * @OA\Get(
-     *     path="/api/client/commande/{id}",
-     *     tags={"Client"},
-     *     summary="Get a specific commande",
-     *     description="Returns a specific commande based on the provided ID",
-     *     operationId="getCommandeById",
-     *     @OA\Parameter(
-     *         name="id",
-     *         in="path",
-     *         description="ID of the commande to retrieve",
-     *         required=true,
-     *         @OA\Schema(
-     *             type="integer",
-     *             format="int64"
-     *         )
-     *     ),
-     *     @OA\Response(
-     *         response=200,
-     *         description="Successful operation"
-     *     ),
-     *     @OA\Response(
-     *         response=404,
-     *         description="Commande not found",
-     *         @OA\JsonContent(
-     *             @OA\Property(
-     *                 property="message",
-     *                 type="string",
-     *                 example="Commande not found"
-     *             )
-     *         )
-     *     )
-     * )
-     */
 
     /**
      * @OA\Get(
@@ -235,73 +200,6 @@ class CommandeController extends Controller
         return response()->json($commande);
     }
 
-    /**
-     * @OA\Put(
-     *      path="/api/client/commande/{id}",
-     *      summary="Update a specific commande",
-     *      description="Update a commande identified by the given ID. Only the authenticated client can update their own commandes.",
-     *      operationId="updateCommande",
-     *      tags={"Client"},
-     *      security={{ "bearerAuth":{} }},
-     *      @OA\Parameter(
-     *          name="id",
-     *          description="ID of the commande to update",
-     *          in="path",
-     *          required=true,
-     *          @OA\Schema(
-     *              type="integer",
-     *              format="int64"
-     *          )
-     *      ),
-     *      @OA\RequestBody(
-     *          description="Updated commande data",
-     *          required=true
-     *      ),
-     *      @OA\Response(
-     *          response=200,
-     *          description="Commande updated successfully"
-     *      ),
-     *      @OA\Response(
-     *          response=400,
-     *          description="Bad request. Validation errors occurred.",
-     *          @OA\JsonContent(
-     *              type="object",
-     *              @OA\Property(
-     *                  property="errors",
-     *                  type="object",
-     *                  description="Validation errors",
-     *                  example={"status": {"The status field is required."}, "quantity": {"The quantity field is required."}}
-     *              )
-     *          )
-     *      ),
-     *      @OA\Response(
-     *          response=401,
-     *          description="Unauthorized. The user is not authenticated.",
-     *          @OA\JsonContent(
-     *              type="object",
-     *              @OA\Property(
-     *                  property="message",
-     *                  type="string",
-     *                  description="Error message",
-     *                  example="Unauthorized"
-     *              )
-     *          )
-     *      ),
-     *      @OA\Response(
-     *          response=404,
-     *          description="Commande not found",
-     *          @OA\JsonContent(
-     *              type="object",
-     *              @OA\Property(
-     *                  property="message",
-     *                  type="string",
-     *                  description="Error message",
-     *                  example="Commande not found"
-     *              )
-     *          )
-     *      )
-     * )
-     */
 
     public function update(Request $request, $id)
     {
@@ -536,7 +434,7 @@ class CommandeController extends Controller
         return response()->json($commande, 200);
     }
 
-    public function terminer($id){
+    public function finish($id){
         $commande = Commande::findOrFail($id);
 
         $commande->update(['status' => 'terminée']);

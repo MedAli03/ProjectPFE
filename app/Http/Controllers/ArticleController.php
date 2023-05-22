@@ -138,7 +138,19 @@ class ArticleController extends Controller
         return response()->json($article, 201);
     }
     
-
+    public function makeAvailable($id) {
+        $article = Article::find($id);
+    
+        if (!$article) {
+            return response()->json(['message' => 'Article not found'], 404);
+        }
+    
+        $article->is_available = true;
+        $article->save();
+    
+        return response()->json(['message' => 'Article updated successfully'], 200);
+    }
+    
     
     /**
      * @OA\Put(

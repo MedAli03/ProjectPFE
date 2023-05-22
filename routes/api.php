@@ -34,16 +34,18 @@ Route::group(['middleware' => ['auth:sanctum', 'role:admin']], function () {
         Route::delete('/delete/{id}', 'App\Http\Controllers\PressingController@destroy');
 
         //  Articles
-        Route::get('/articles/show', 'App\Http\Controllers\ArticleController@index');
+        Route::get('/articles', 'App\Http\Controllers\ArticleController@index');
+        Route::get('/articles/getnotavailable', 'App\Http\Controllers\ArticleController@getNotAvailableArticle');
         Route::post('/articles/add', 'App\Http\Controllers\ArticleController@store');
-        Route::put('/articles/edit/{id}', 'App\Http\Controllers\ArticleController@update');
-        Route::delete('/articles/delete', 'App\Http\Controllers\ArticleController@destroy');
+        Route::put('/articles/edit/{id}', 'App\Http\Controllers\ArticleController@makeAvailable');
+        Route::delete('/articles/delete/{id}', 'App\Http\Controllers\ArticleController@destroy');
 
-        //  service
-        Route::get('/service/all', 'App\Http\Controllers\ServiceController@index');
-        Route::post('/', 'App\Http\Controllers\ServiceController@store');
-        
-
+        //  services
+        Route::post('/addservice', 'App\Http\Controllers\ServiceController@store');
+        Route::get('/getservice', 'App\Http\Controllers\ServiceController@getAvailableServices');
+        Route::get('/servicenotavailable', 'App\Http\Controllers\ServiceController@getServicesNotAvailable');
+        Route::put('/accepte/{id}', 'App\Http\Controllers\ServiceController@makeAvailable');
+        Route::delete('/delete/{id}', 'App\Http\Controllers\ServiceController@destroy');
     });
 });
 
@@ -81,6 +83,7 @@ Route::group(['middleware' => ['auth:sanctum', 'role:client']], function () {
 
         Route::prefix('service')->group(function () {
             Route::get('/{id}', 'App\Http\Controllers\ServiceController@getServicesForPressing');
+            
         });
 
         Route::prefix('article')->group(function () {
@@ -145,7 +148,7 @@ Route::group(['middleware' => ['auth:sanctum', 'role:pressing']], function () {
             Route::get('/{id}', 'App\Http\Controllers\CommandeController@show');
             Route::put('/status/{id}', 'App\Http\Controllers\CommandeController@modifyStatus');
             Route::put('/accepte/{id}', 'App\Http\Controllers\CommandeController@markAsInProgress');
-            Route::put('/terminer/{id}', 'App\Http\Controllers\CommandeController@terminer');
+            Route::put('/terminer/{id}', 'App\Http\Controllers\CommandeController@finish');
             Route::post('/invoice/{id}', 'App\Http\Controllers\CommandeController@addingInvoice');
             Route::delete('/delete/{id}', 'App\Http\Controllers\CommandeController@destroy');
         });

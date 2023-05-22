@@ -15,23 +15,23 @@ class UserSeeder extends Seeder
     public function run()
     {
         // Create an admin user
-        User::create([
-            'first_name' => 'Admin',
-            'last_name' => 'User',
-            'email' => 'admin' . substr(str_shuffle("abcdefghijklmnopqrstuvwxyz"), 0, 8) . '@example.com',
-            'phone' => rand(1000000000, 9999999999),
-            'password' => Hash::make('password'),
-            'role' => 'admin',
-            'is_active' => true,
-            'is_validated' => true
-        ]);
+        // User::create([
+        //     'first_name' => 'Admin',
+        //     'last_name' => 'User',
+        //     'cin' => rand(10000000, 99999999),
+        //     'phone' => rand(1000000000, 9999999999),
+        //     'password' => Hash::make('password'),
+        //     'role' => 'admin',
+        //     'is_active' => true,
+        //     'is_validated' => true
+        // ]);
 
         // Create a client user
         User::create([
             'first_name' => 'Client',
             'last_name' => 'User',
-            'email' =>  'client' . substr(str_shuffle("abcdefghijklmnopqrstuvwxyz"), 0, 8) . '@example.com',
-            'phone' => rand(1000000000, 9999999999),
+            'cin' => rand(10000000, 99999999),
+            'phone' => rand(1000000, 99999999),
             'password' => Hash::make('password'),
             'role' => 'client',
             'is_active' => true,
@@ -46,7 +46,7 @@ class UserSeeder extends Seeder
         User::create([
             'pressing_name' => 'Pressing',
             'tva' => '1234562',
-            'email' =>  'pressing ' . substr(str_shuffle("abcdefghijklmnopqrstuvwxyz"), 0, 8) . '@example.com',
+            'cin' => rand(10000000, 99999999),
             'phone' => rand(1000000000, 9999999999),
             'password' => Hash::make('password'),
             'role' => 'pressing',
