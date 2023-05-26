@@ -10,39 +10,35 @@ class Commande extends Model
     use HasFactory;
 
     protected $fillable = [
-
         'client_id',
         'pressing_id',
         'tarif_id',
         'status',
-        'quantity',
         'total_price',
-       
-
-       
-        
-        // add more attributes here as needed
     ];
 
     public function client()
     {
-        return $this->belongsTo(User::class, 'client_id')->where('role', 'client');
+        return $this->belongsTo(User::class, 'client_id');
     }
 
     public function pressing()
     {
-        return $this->belongsTo(User::class, 'pressing_id')->where('role', 'pressing');
+        return $this->belongsTo(User::class, 'pressing_id');
     }
 
-    public function tarifs()
+    public function tarif()
     {
-        return $this->belongsToMany(Tarif::class)
-            ->withPivot('quantity', 'price');
+        return $this->belongsTo(Tarif::class);
+    }
+
+    public function details()
+    {
+        return $this->hasMany(Detail::class);
     }
 
     public function facture()
     {
         return $this->hasOne(Facture::class);
     }
-
 }

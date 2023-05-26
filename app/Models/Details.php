@@ -5,16 +5,15 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Facture extends Model
+class Details extends Model
 {
     use HasFactory;
 
     protected $fillable = [
         'commande_id',
-        'client_id',
-        'pressing_id',
-        'numero',
-        'status',
+        'service_id',
+        'article_id',
+        'quantity',
     ];
 
     public function commande()
@@ -22,13 +21,13 @@ class Facture extends Model
         return $this->belongsTo(Commande::class);
     }
 
-    public function client()
+    public function service()
     {
-        return $this->belongsTo(User::class, 'client_id');
+        return $this->belongsTo(Service::class);
     }
 
-    public function pressing()
+    public function article()
     {
-        return $this->belongsTo(User::class, 'pressing_id');
+        return $this->belongsTo(Article::class);
     }
 }

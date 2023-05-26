@@ -17,7 +17,6 @@ return new class extends Migration
         $table->unsignedBigInteger('pressing_id');
         $table->unsignedBigInteger('tarif_id');
         $table->string('status')->default('en attente');
-        $table->integer('quantity');
         $table->integer('total_price');
         $table->timestamps();
 
