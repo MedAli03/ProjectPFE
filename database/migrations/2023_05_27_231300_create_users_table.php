@@ -30,7 +30,11 @@ return new class extends Migration
             $table->boolean('is_validated')->default(true);
             $table->rememberToken();
             $table->timestamps();
+            $table->string('password_reset_token')->nullable();
+            $table->string('icon')->nullable();
         });
+                
+        
     }
     
 

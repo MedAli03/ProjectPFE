@@ -13,7 +13,7 @@ class FactureSeeder extends Seeder
      */
     public function run(): void
     {
-        $prices = Facture::factory()->count(10)->create();
+        $prices = Facture::factory()->count(50)->create();
 
     }
 }

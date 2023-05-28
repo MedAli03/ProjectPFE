@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('client_id');
             $table->unsignedBigInteger('pressing_id');
             $table->string('numero');
-            $table->string('status')->default('non payer');;
+            $table->string('status')->default('non payé');;
             $table->timestamps();
 
             $table->foreign('commande_id')->references('id')->on('commandes')->onDelete('cascade');

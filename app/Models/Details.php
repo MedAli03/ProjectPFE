@@ -13,7 +13,8 @@ class Details extends Model
         'commande_id',
         'service_id',
         'article_id',
-        'quantity',
+        'sum_tarif_price',
+        'nbr_article',
     ];
 
     public function commande()
@@ -29,5 +30,9 @@ class Details extends Model
     public function article()
     {
         return $this->belongsTo(Article::class);
+    }
+    public function tarif()
+    {
+        return $this->belongsTo(Tarif::class);
     }
 }

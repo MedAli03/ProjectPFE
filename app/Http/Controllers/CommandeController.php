@@ -81,7 +81,7 @@ class CommandeController extends Controller
 {
     $pressing = $request->user();
 
-    $commandes = Commande::with('client')->where('pressing_id', $pressing->id)->orderBy('created_at', 'desc')->get();
+    $commandes = Commande::with('client','tarif','pressing')->where('pressing_id', $pressing->id)->orderBy('created_at', 'desc')->get();
 
     return response()->json($commandes);
 }
@@ -128,15 +128,13 @@ class CommandeController extends Controller
         $validator = Validator::make($request->all(), [
             'client_id' => 'required|exists:users,id',
             'pressing_id' => 'required|exists:users,id',
-            'article_id' => 'required|exists:articles,id',
-            'service_id' => 'required|exists:services,id',
-            'quantity' => 'required|integer|min:1',
+            'tarif_id' => 'required|exists:tarifs,id',
             'status' => [
                 'required',
                 'in:en attente, en cours, terminer',
                 Rule::default('en attente')
             ],
-            'total_amount' => 'required|numeric|min:0',
+            'total_price' => 'required|numeric|min:0',
         ]);
 
         if ($validator->fails()) {
@@ -146,11 +144,9 @@ class CommandeController extends Controller
         $commande = Commande::create([
             'client_id' => $request->client_id,
             'pressing_id' => $request->pressing_id,
-            'article_id' => $request->article_id,
-            'service_id' => $request->service_id,
-            'quantity' => $request->quantity,
+            'tarif_id' => $request->tarif_id,
             'status' => $request->status,
-            'total_amount' => $request->total_amount,
+            'total_price' => $request->total_price,
             // add more attributes here as needed
         ]);
 
@@ -212,8 +208,7 @@ class CommandeController extends Controller
         }
     
         $validator = Validator::make($request->all(), [
-            'status' => 'required|in:en attente, annuler, confirmer, en cours, terminer',
-            'quantity' => 'required|integer|min:1',
+            'status' => 'required|in:en attente, en cours, terminer',
             'total_price' => 'required|numeric|min:0',
             // add other fields as needed
         ]);

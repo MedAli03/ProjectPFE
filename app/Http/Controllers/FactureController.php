@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Commande;
 use App\Models\Facture;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 
 class FactureController extends Controller
@@ -16,7 +18,7 @@ class FactureController extends Controller
     public function getPressingFactures(Request $request)
     {
         $pressingId = $request->user()->id;
-        $factures = Facture::where('pressing_id', $pressingId)->get();
+        $factures = Facture::with('client','commande','pressing')->where('pressing_id', $pressingId)->get();
         return response()->json($factures);
     }
 
@@ -51,13 +53,16 @@ class FactureController extends Controller
         return response()->json($facture, 200);
     }
 
-    public function markAsPaid(Request $request)
+    public function markAsPaid(Request $request, $id)
     {
-        $facture = Facture::findOrFail($request->facture_id);
-        $facture->status = 'paid';
+        $facture = Facture::findOrFail($id);
+        $facture->status = 'payé'; // Update the status value to 'payé'
         $facture->save();
-
-        return response()->json($facture, 200);
+    
+        return response()->json([
+            'message' => 'Facture payée', // Update the response message
+            'data' => $facture
+        ]);
     }
 
     public function printInvoice(Facture $facture)
@@ -70,6 +75,34 @@ class FactureController extends Controller
         // Once the invoice is printed, you can return a response indicating success
         return response()->json(['message' => 'Invoice printed successfully']);
     }
+
+    public function facturer(Request $request,$id)
+    {
+        $commande = Commande::find($id);
+
+    
+        $pressing = $commande->pressing;
+        $client = $commande->client;
+    
+        // Create a new invoice
+        $facture = Facture::create([
+            'commande_id' => $commande->id,
+            'client_id' => $client->id,
+            'pressing_id' => $pressing->id,
+            'numero' => 'INV' . Carbon::now()->format('YmdHis'), // Generate a unique invoice number
+            'status' => 'non payé', // Set the default status to 'non payé'
+        ]);
+    
+        // Update the command with the invoice ID
+        $commande->save();
+    
+        return response()->json([
+            'message' => 'Invoice created successfully',
+            'facture' => $facture
+        ]);
+    }
+    
+
 
     public function destroy(Facture $facture)
     {

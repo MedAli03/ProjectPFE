@@ -6,9 +6,11 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Twilio\Rest\Client;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
-
-class AuthController extends Controller
+class AuthController extends Controller 
 {
  
         public function index()
@@ -120,5 +122,34 @@ class AuthController extends Controller
         return response()->json(['message' => 'Successfully logged out']);
     }
 
+
+    public function sendPasswordResetLink(Request $request)
+    {
+        $cin = $request->input('cin');
+        $phone = $request->input('phone');
+    
+        $token = Str::random(40);
+    
+        // Store the generated token in the database
+        DB::table('users')->where('cin', $cin)->update([
+            'password_reset_token' => $token,
+        ]);
+    
+        // Send the password reset link via SMS using Twilio
+        $sid = env('TWILIO_SID');
+        $token = env('TWILIO_AUTH_TOKEN');
+        $fromNumber = env('TWILIO_PHONE_NUMBER');
+    
+        $client = new Client($sid, $token);
+        $client->messages->create(
+        '+216' . $phone, // Include the country code (+216 for Tunisia)
+        [
+            'from' => $fromNumber,
+            'body' => 'Your password reset token: ' . $token,
+        ]
+    );
+    
+    
+    }
 }
 

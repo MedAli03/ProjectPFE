@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/register', 'App\Http\Controllers\AuthController@register');
 Route::post('/login', 'App\Http\Controllers\AuthController@login');
+Route::post('/password/reset', 'App\Http\Controllers\AuthController@sendPasswordResetLink');
 
 // Admin routes
 Route::group(['middleware' => ['auth:sanctum', 'role:admin']], function () {
@@ -162,9 +163,10 @@ Route::group(['middleware' => ['auth:sanctum', 'role:pressing']], function () {
         });
 
         Route::prefix('facture')->group(function () {
-            Route::get('/', 'App\Http\Controllers\FactureController@index');
+            Route::post('/facturer/{id}', 'App\Http\Controllers\FactureController@facturer');
+            Route::get('/all', 'App\Http\Controllers\FactureController@getPressingFactures');
             Route::get('/{id}', 'App\Http\Controllers\FactureController@show');
-            Route::put('/{id}', 'App\Http\Controllers\FactureController@update');
+            Route::put('/{id}', 'App\Http\Controllers\FactureController@markAsPaid');
             Route::delete('/{id}', 'App\Http\Controllers\FactureController@destroy');
         });
         Route::prefix('rating')->group(function () {

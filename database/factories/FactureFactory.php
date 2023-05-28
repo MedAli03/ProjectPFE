@@ -18,13 +18,15 @@ class FactureFactory extends Factory
      */
     public function definition(): array
     {
+        $status = $this->faker->randomElement(['payé', 'non payé']);
+
         return [
             'commande_id' => Commande::pluck('id')->random(),
             'client_id' => User::where('role', 'client')->pluck('id')->random(),
             'pressing_id' => User::where('role', 'pressing')->pluck('id')->random(),
+            'status' => $status,
             'numero' => $this->faker->unique()->numerify('FAC######'),
-            'date' => $this->faker->dateTimeBetween('-1 year', 'now'),
-            'total' => $this->faker->numberBetween(1000, 50000),
+
         ];
     }
 }

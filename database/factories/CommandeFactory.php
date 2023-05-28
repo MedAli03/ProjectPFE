@@ -21,19 +21,20 @@ class CommandeFactory extends Factory
     protected $model = Commande::class;
 
     public function definition()
-{
-    $tarif = Tarif::all()->random();
-    $quantity = $this->faker->numberBetween(1, 10);
-    $totalPrice = $tarif->price * $quantity;
-
-    return [
-        'client_id' => User::where('role', 'client')->pluck('id')->random(),
-        'pressing_id' => User::where('role', 'pressing')->pluck('id')->random(),
-        'tarif_id' => $tarif->id,
-        'status' => $this->faker->randomElement(['en attente', 'en cours', 'terminée']),
-        'quantity' => $quantity,
-        'total_price' => $totalPrice,
-    ];
-}
+    {
+        $tarif = Tarif::all()->random();
+        $quantity = $this->faker->numberBetween(1, 15); // Generate random quantity between 1 and 15
+        $totalPrice = $tarif->price * $quantity;
+    
+        return [
+            'client_id' => User::where('role', 'client')->pluck('id')->random(),
+            'pressing_id' => User::where('role', 'pressing')->pluck('id')->random(),
+            'tarif_id' => $tarif->id,
+            'quantity' => $quantity,
+            'status' => $this->faker->randomElement(['en attente', 'en cours', 'terminée']),
+            'total_price' => $totalPrice,
+        ];
+    }
+    
 
 }
