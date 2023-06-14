@@ -37,11 +37,12 @@ class AuthController extends Controller
             'password' => [
                 'required',
                 'string',
-                'min:8',
-                'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/'
+                'min:8'
             ],
             'address' => 'required',
             'city' => 'required',
+            'email' => 'required',
+
             'country' => 'required',
             'postal_code' => 'required',
             'role' => 'required|in:client,pressing,admin',
@@ -57,7 +58,7 @@ class AuthController extends Controller
     
         $user = new User;
         $user->cin = $request->cin;
-        // $user->cin = $request->cin;
+         $user->email = $request->email;
         $user->phone = $request->phone;
         $user->password = bcrypt($request->password);   
         $user->address = $request->address;
