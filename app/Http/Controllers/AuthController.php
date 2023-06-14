@@ -87,7 +87,7 @@ class AuthController extends Controller
     public function login(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'cin' => 'required',
+            'email' => 'required',
             'password' => 'required',
         ]);
     
@@ -95,10 +95,10 @@ class AuthController extends Controller
             return response()->json(['errors' => $validator->errors()], 400);
         }
     
-        $user = User::where('cin', $request->cin)->first();
+        $user = User::where('email', $request->email)->first();
     
         if (!$user || !Hash::check($request->password, $user->password)) {
-            return response()->json(['message' => 'Invalid cin or password'], 401);
+            return response()->json(['message' => 'Invalid email or password'], 401);
         }
     
         if (!$user->is_active) {
