@@ -127,14 +127,11 @@ class CommandeController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'client_id' => 'required|exists:users,id',
-            'pressing_id' => 'required|exists:users,id',
-            'tarif_id' => 'required|exists:tarifs,id',
-            'status' => [
-                'required',
-                'in:en attente, en cours, terminer',
-                Rule::default('en attente')
-            ],
+            // 'pressing_id' => 'required|exists:users,id',
+            // 'tarif_id' => 'required|exists:tarifs,id',
             'total_price' => 'required|numeric|min:0',
+            'items' => 'required',
+
         ]);
 
         if ($validator->fails()) {
@@ -145,8 +142,9 @@ class CommandeController extends Controller
             'client_id' => $request->client_id,
             'pressing_id' => $request->pressing_id,
             'tarif_id' => $request->tarif_id,
-            'status' => $request->status,
+            'status' => 'en attente',
             'total_price' => $request->total_price,
+            'items' => json_encode($request->items),
             // add more attributes here as needed
         ]);
 

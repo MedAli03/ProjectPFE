@@ -11,6 +11,7 @@ class Commande extends Model
 
     protected $fillable = [
         'client_id',
+        'items',
         'pressing_id',
         'tarif_id',
         'status',
