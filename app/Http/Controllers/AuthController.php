@@ -42,7 +42,6 @@ class AuthController extends Controller
             'address' => 'required',
             'city' => 'required',
             'email' => 'required',
-
             'country' => 'required',
             'postal_code' => 'required',
             'role' => 'required|in:client,pressing,admin',
@@ -108,10 +107,16 @@ class AuthController extends Controller
     
         $token = $user->createToken('auth_token')->plainTextToken;
         $role = $user->role;
+        $userData = [];
+        $userData['id'] = $user->id  ;
+        $userData['first_name'] = $user->first_name ;
+        $userData['last_name'] = $user->last_name ;
+        
         return response()->json([
             'message' => "Login successfully",
             'access_token' => $token,
-            'role' => $role
+            'role' => $role,
+            'user' => $userData
         ]);
     }
     
