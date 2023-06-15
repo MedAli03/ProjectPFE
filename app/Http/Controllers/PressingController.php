@@ -243,8 +243,10 @@ class PressingController extends Controller
     
     public function activePressings()
     {
-        return User::where('role', 'pressing')
+        $items =  User::where('role', 'pressing')
             ->where('is_active', true)
             ->get();
-    }
+        return response()->json(['data' => $items], 200);
+            
+        }
 }
